@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Bed, Bath, Square, ArrowRight } from 'lucide-react';
+import { formatPrice } from '../utils/formatPrice';
 
 const PropertyCard = ({ property }) => {
     const mainImage = property.images && property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/800x400';
@@ -18,7 +19,7 @@ const PropertyCard = ({ property }) => {
                     For {property.type}
                 </div>
                 <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md text-green-700 font-bold">
-                    {property.price}
+                    {formatPrice(property.price)}
                 </div>
             </div>
 

@@ -79,56 +79,27 @@ exports.getProperties = async (req, res) => {
             query.location = { $regex: location, $options: 'i' };
         }
 
-        console.log("Mongo Query:", query);
-
-        // Price range filtering
+        // Price range filtering using MongoDB queries
         if (budget && budget !== 'any') {
-            // Helper to parse price string "1,25,00,000" to number 12500000
-            // Note: This assumes prices are stored as strings in the DB. 
-            // Ideally, they should be numbers. If they are strings, we can't easily do range queries 
-            // without aggregation or converting them.
-            // However, looking at the model, price IS a string. This is a design flaw for range queries.
-            // For now, we will try to filter in memory or use regex if possible, but range is hard on strings.
-            // A better approach is to store price as Number.
+            const budgetRanges = {
+                'low': { min: 0, max: 5000000 },           // Up to 50 Lakhs
+                'medium': { min: 5000000, max: 10000000 }, // 50L - 1 Cr
+                'high': { min: 10000000, max: 50000000 },  // 1 Cr - 5 Cr
+                'luxury': { min: 50000000, max: Infinity } // Above 5 Cr
+            };
 
-            // Since we can't easily change the DB schema and migrate data right now without risk,
-            // let's try to fetch all and filter in JS (not efficient but works for small datasets).
-            // OR we can try to rely on the user inputting consistent formats.
-
-            // Let's do in-memory filtering for now as the dataset is likely small.
+            const range = budgetRanges[budget];
+            if (range) {
+                query.price = { $gte: range.min };
+                if (range.max !== Infinity) {
+                    query.price.$lte = range.max;
+                }
+            }
         }
 
-        let properties = await Property.find(query).sort({ createdAt: -1 });
+        console.log("Final Mongo Query:", query);
 
-        // In-memory filtering for price if budget is set
-        if (budget && budget !== 'any') {
-            console.log("Filtering by budget:", budget);
-            properties = properties.filter(p => {
-                // Remove commas and convert to number
-                // Handle various formats: "1,25,00,000", "1.5 Cr", "50 Lakhs", "₹ 1,25,00,000"
-                let priceStr = p.price.toString().toLowerCase().replace(/,/g, '').replace(/₹/g, '').trim();
-                let priceVal = 0;
-
-                if (priceStr.includes('cr')) {
-                    priceVal = parseFloat(priceStr.replace('cr', '').trim()) * 10000000;
-                } else if (priceStr.includes('lakh')) {
-                    priceVal = parseFloat(priceStr.replace('lakhs', '').replace('lakh', '').trim()) * 100000;
-                } else {
-                    priceVal = parseInt(priceStr.replace(/[^0-9.]/g, '')) || 0;
-                }
-
-                console.log(`Property: ${p.title}, Price: ${p.price}, Parsed: ${priceVal}`);
-
-                switch (budget) {
-                    case 'low': return priceVal < 5000000; // Under 50L
-                    case 'medium': return priceVal >= 5000000 && priceVal <= 10000000; // 50L - 1 Cr
-                    case 'high': return priceVal > 10000000 && priceVal <= 20000000; // 1 Cr - 2 Cr
-                    case 'luxury': return priceVal > 20000000; // Above 2 Cr
-                    default: return true;
-                }
-            });
-            console.log("Properties after budget filter:", properties.length);
-        }
+        const properties = await Property.find(query).sort({ createdAt: -1 });
 
         res.json(properties);
     } catch (err) {

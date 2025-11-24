@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { propertyAPI } from '../services/api';
 import ContactForm from '../components/ContactForm';
 import { MapPin, Bed, Bath, Square, Check, ArrowLeft } from 'lucide-react';
+import { formatPrice } from '../utils/formatPrice';
 
 const PropertyDetails = () => {
     const { id } = useParams();
@@ -69,7 +70,7 @@ const PropertyDetails = () => {
                                     <img
                                         key={idx}
                                         src={img}
-                                        alt={`${property.title} ${idx + 1}`}
+                                        alt={`${property.title} ${idx + 1} `}
                                         className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity"
                                     // Add onClick handler to change main image if we want to implement that state
                                     />
@@ -87,7 +88,7 @@ const PropertyDetails = () => {
                                     </div>
                                 </div>
                                 <div className="mt-4 md:mt-0">
-                                    <span className="block text-3xl font-bold text-green-700">{property.price}</span>
+                                    <span className="block text-3xl font-bold text-green-700">{formatPrice(property.price)}</span>
                                     <span className="block text-right text-gray-500 text-sm">For {property.type}</span>
                                 </div>
                             </div>

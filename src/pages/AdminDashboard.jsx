@@ -151,7 +151,7 @@ const AdminDashboard = () => {
         const propertyData = {
             title: formData.title,
             description: formData.description,
-            price: formData.price,
+            price: parseFloat(formData.price) || 0,
             location: formData.location,
             type: formData.type,
             category: formData.category,
