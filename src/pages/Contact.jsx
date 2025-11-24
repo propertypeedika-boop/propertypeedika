@@ -1,6 +1,6 @@
 import React from 'react';
 import ContactForm from '../components/ContactForm';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, MessageCircle, Instagram } from 'lucide-react';
 
 const Contact = () => {
     return (
@@ -51,6 +51,42 @@ const Contact = () => {
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
                                         <p className="text-gray-600">info@propertypeedika.com</p>
                                         <p className="text-gray-600">support@propertypeedika.com</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start">
+                                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                                        <MessageCircle className="h-6 w-6 text-green-700" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-1">WhatsApp</h3>
+                                        <a
+                                            href="https://wa.me/919876543210?text=Hi%2C%20I%27m%20interested%20in%20your%20properties"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
+                                        >
+                                            <MessageCircle className="h-4 w-4 mr-2" />
+                                            Chat with us
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start">
+                                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                                        <Instagram className="h-6 w-6 text-green-700" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-1">Instagram</h3>
+                                        <a
+                                            href="https://instagram.com/propertypeedika"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
+                                        >
+                                            <Instagram className="h-4 w-4 mr-2" />
+                                            @propertypeedika
+                                        </a>
                                     </div>
                                 </div>
 
