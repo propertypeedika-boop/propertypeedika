@@ -79,13 +79,13 @@ const Contact = () => {
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Instagram</h3>
                                         <a
-                                            href="https://instagram.com/propertypeedika"
+                                            href="https://www.instagram.com/property_peedika?igsh=MWRzZWpxYmNuNjd6aw=="
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
                                         >
                                             <Instagram className="h-4 w-4 mr-2" />
-                                            @propertypeedika
+                                            @property_peedika
                                         </a>
                                     </div>
                                 </div>
