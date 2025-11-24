@@ -1,0 +1,59 @@
+const mongoose = require('mongoose');
+
+const propertySchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: String,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ['sale', 'rent'],
+        required: true
+    },
+    category: {
+        type: String,
+        enum: ['apartment', 'villa', 'house', 'plot', 'commercial'],
+        required: true
+    },
+    specs: {
+        beds: {
+            type: Number,
+            default: 0
+        },
+        baths: {
+            type: Number,
+            default: 0
+        },
+        area: {
+            type: String,
+            required: true
+        }
+    },
+    amenities: [{
+        type: String
+    }],
+    images: [{
+        type: String
+    }],
+    featured: {
+        type: Boolean,
+        default: false
+    }
+}, {
+    timestamps: true
+});
+
+module.exports = mongoose.model('Property', propertySchema);
