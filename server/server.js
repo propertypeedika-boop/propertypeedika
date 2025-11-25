@@ -25,6 +25,29 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Server is running' });
 });
 
+// Debug DB Route
+const mongoose = require('mongoose');
+app.get('/api/debug/db', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const collections = await db.listCollections().toArray();
+        const collectionNames = collections.map(c => c.name);
+
+        const counts = {};
+        for (const name of collectionNames) {
+            counts[name] = await db.collection(name).countDocuments();
+        }
+
+        res.json({
+            connected_db_name: db.databaseName,
+            collections: collectionNames,
+            counts: counts
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
