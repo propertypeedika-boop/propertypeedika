@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { propertyAPI } from '../services/api';
 import ContactForm from '../components/ContactForm';
-import { MapPin, Bed, Bath, Square, Check, ArrowLeft } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, Check, ArrowLeft, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 import { formatPrice } from '../utils/formatPrice';
 
 const PropertyDetails = () => {
@@ -10,6 +10,7 @@ const PropertyDetails = () => {
     const [property, setProperty] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -42,8 +43,21 @@ const PropertyDetails = () => {
         );
     }
 
-    // Use the first image as main, or a placeholder
-    const mainImage = property.images && property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/800x400';
+    // Get images or use placeholder
+    const images = property.images && property.images.length > 0 ? property.images : ['https://via.placeholder.com/800x400'];
+    const mainImage = images[currentImageIndex];
+
+    const handlePrevImage = () => {
+        setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    };
+
+    const handleNextImage = () => {
+        setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    };
+
+    const handleThumbnailClick = (index) => {
+        setCurrentImageIndex(index);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
@@ -55,24 +69,53 @@ const PropertyDetails = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+                        <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8 relative group">
                             <img
                                 src={mainImage}
-                                alt={property.title}
+                                alt={`${property.title} - Image ${currentImageIndex + 1}`}
                                 className="w-full h-[400px] object-cover"
                             />
+
+                            {/* Navigation arrows - only show if multiple images */}
+                            {images.length > 1 && (
+                                <>
+                                    <button
+                                        onClick={handlePrevImage}
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full opacity-60 group-hover:opacity-100 transition-all duration-300 shadow-lg z-10 hover:scale-110"
+                                        aria-label="Previous image"
+                                    >
+                                        <ChevronLeft className="h-6 w-6" />
+                                    </button>
+                                    <button
+                                        onClick={handleNextImage}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full opacity-60 group-hover:opacity-100 transition-all duration-300 shadow-lg z-10 hover:scale-110"
+                                        aria-label="Next image"
+                                    >
+                                        <ChevronRight className="h-6 w-6" />
+                                    </button>
+
+                                    {/* Image counter */}
+                                    <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+                                        <Camera className="h-4 w-4" />
+                                        {currentImageIndex + 1} / {images.length}
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         {/* Thumbnail gallery if multiple images */}
-                        {property.images && property.images.length > 1 && (
+                        {images.length > 1 && (
                             <div className="grid grid-cols-4 gap-4 mb-8">
-                                {property.images.map((img, idx) => (
+                                {images.map((img, idx) => (
                                     <img
                                         key={idx}
                                         src={img}
-                                        alt={`${property.title} ${idx + 1} `}
-                                        className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity"
-                                    // Add onClick handler to change main image if we want to implement that state
+                                        alt={`${property.title} ${idx + 1}`}
+                                        onClick={() => handleThumbnailClick(idx)}
+                                        className={`w-full h-24 object-cover rounded-lg cursor-pointer transition-all duration-300 ${idx === currentImageIndex
+                                                ? 'ring-4 ring-green-500 opacity-100 scale-105'
+                                                : 'hover:opacity-75 hover:scale-105'
+                                            }`}
                                     />
                                 ))}
                             </div>
