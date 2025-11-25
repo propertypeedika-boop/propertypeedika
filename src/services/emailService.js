@@ -2,9 +2,9 @@ import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with Public Key
 // Ideally, this should be in an environment variable: VITE_EMAILJS_PUBLIC_KEY
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'Us2nqvYcK8nQ0zBRP';
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_0l3z159';
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_z45lejl';
 
 export const sendEmail = async (templateParams) => {
     try {
