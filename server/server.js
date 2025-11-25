@@ -5,8 +5,8 @@ const connectDB = require('./config/db');
 
 const app = express();
 
-// Connect to MongoDB
-connectDB().catch(err => console.error("MongoDB Connection Error:", err));
+// Connect to MongoDB - REMOVED TOP LEVEL CALL
+// connectDB().catch(err => console.error("MongoDB Connection Error:", err));
 
 // Middleware
 app.use(cors());
@@ -22,13 +22,21 @@ app.use('/uploads', express.static('uploads'));
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', message: 'Server is running' });
+    res.json({
+        status: 'OK',
+        message: 'Server is running',
+        env_check: {
+            mongo_uri_exists: !!process.env.MONGODB_URI,
+            node_env: process.env.NODE_ENV
+        }
+    });
 });
 
 // Debug DB Route
 const mongoose = require('mongoose');
 app.get('/api/debug/db', async (req, res) => {
     try {
+        await connectDB(); // Lazy connect here
         const db = mongoose.connection.db;
         const collections = await db.listCollections().toArray();
         const collectionNames = collections.map(c => c.name);
@@ -44,7 +52,7 @@ app.get('/api/debug/db', async (req, res) => {
             counts: counts
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message, stack: error.stack });
     }
 });
 
