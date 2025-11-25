@@ -103,11 +103,17 @@ const Contact = () => {
                             </div>
                         </div>
 
-                        <div className="bg-gray-200 rounded-lg h-64 w-full flex items-center justify-center text-gray-500">
-                            <div className="text-center">
-                                <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                                <p>Google Map Integration</p>
-                            </div>
+                        <div className="glass-card rounded-xl overflow-hidden h-96 w-full">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.6891234567!2d76.9474!3d8.5241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzEnMjYuOCJOIDc2wrA1Nic1MC42IkU!5e0!3m2!1sen!2sin!4v1234567890"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen=""
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                title="PropertyPeedika Office Location - Kowdiar, Trivandrum"
+                            ></iframe>
                         </div>
                     </div>
 
