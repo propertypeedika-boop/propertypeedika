@@ -14,7 +14,8 @@ const Listings = () => {
             location: searchParams.get('location') || '',
             type: searchParams.get('type') || 'all',
             category: searchParams.get('category') || 'all',
-            budget: searchParams.get('budget') || 'all'
+            minBudget: searchParams.get('minBudget') || '',
+            maxBudget: searchParams.get('maxBudget') || ''
         };
     });
 
@@ -26,13 +27,15 @@ const Listings = () => {
         const typeParam = searchParams.get('type');
         const categoryParam = searchParams.get('category');
         const locationParam = searchParams.get('location');
-        const budgetParam = searchParams.get('budget');
+        const minBudgetParam = searchParams.get('minBudget');
+        const maxBudgetParam = searchParams.get('maxBudget');
 
         const newFilters = {
             type: typeParam || 'all',
             category: categoryParam || 'all',
             location: locationParam || '',
-            budget: budgetParam || 'all'
+            minBudget: minBudgetParam || '',
+            maxBudget: maxBudgetParam || ''
         };
         console.log("Listings: Setting filters from URL", newFilters);
 
@@ -52,7 +55,8 @@ const Listings = () => {
                 if (filters.type !== 'all') params.type = filters.type;
                 if (filters.category !== 'all') params.category = filters.category;
                 if (filters.location) params.location = filters.location;
-                if (filters.budget !== 'all') params.budget = filters.budget;
+                if (filters.minBudget) params.minBudget = filters.minBudget;
+                if (filters.maxBudget) params.maxBudget = filters.maxBudget;
 
                 console.log("Listings: Sending API request with params", params);
                 const response = await propertyAPI.getAll(params);
@@ -66,7 +70,7 @@ const Listings = () => {
         };
 
         fetchProperties();
-    }, [filters.type, filters.category, filters.location, filters.budget]); // Re-fetch when API-supported filters change
+    }, [filters.type, filters.category, filters.location, filters.minBudget, filters.maxBudget]); // Re-fetch when API-supported filters change
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -126,7 +130,7 @@ const Listings = () => {
                         <h3 className="text-xl font-medium text-gray-900">No properties found matching your criteria.</h3>
                         <p className="text-gray-500 mt-2">Try adjusting your filters to see more results.</p>
                         <button
-                            onClick={() => setFilters({ type: 'all', category: 'all', budget: 'all', location: '' })}
+                            onClick={() => setFilters({ type: 'all', category: 'all', minBudget: '', maxBudget: '', location: '' })}
                             className="mt-4 text-green-700 font-semibold hover:underline"
                         >
                             Clear all filters

@@ -1,20 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Bed, Bath, Square, ArrowRight } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, ArrowRight, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 import { formatPrice } from '../utils/formatPrice';
 
 const PropertyCard = ({ property }) => {
-    const mainImage = property.images && property.images.length > 0 ? property.images[0] : 'https://via.placeholder.com/800x400';
+    const images = property.images && property.images.length > 0 ? property.images : ['https://via.placeholder.com/800x400'];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const id = property._id || property.id; // Fallback for dummy data if mixed
+
+    const handlePrevImage = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    };
+
+    const handleNextImage = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    };
 
     return (
         <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-            <div className="relative h-64">
+            <div className="relative h-64 group">
                 <img
-                    src={mainImage}
-                    alt={property.title}
+                    src={images[currentImageIndex]}
+                    alt={`${property.title} - Image ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
+
+                {/* Image navigation arrows - only show if multiple images */}
+                {images.length > 1 && (
+                    <>
+                        <button
+                            onClick={handlePrevImage}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+                            aria-label="Previous image"
+                        >
+                            <ChevronLeft className="h-5 w-5" />
+                        </button>
+                        <button
+                            onClick={handleNextImage}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+                            aria-label="Next image"
+                        >
+                            <ChevronRight className="h-5 w-5" />
+                        </button>
+
+                        {/* Image counter */}
+                        <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-md text-sm font-medium flex items-center gap-1">
+                            <Camera className="h-4 w-4" />
+                            {currentImageIndex + 1}/{images.length}
+                        </div>
+                    </>
+                )}
+
                 <div className="absolute top-4 left-4 bg-green-700 text-white px-3 py-1 rounded-md text-sm font-semibold">
                     For {property.type}
                 </div>

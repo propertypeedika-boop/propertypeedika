@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const heroImages = [
     "https://static.vecteezy.com/system/resources/thumbnails/071/068/927/small/luxury-home-at-sunset-modern-exterior-stone-accents-and-warm-lighting-large-windows-manicured-landscaping-photo.jpeg",
-    "https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
     "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
@@ -29,7 +29,8 @@ const Hero = () => {
         if (filters.location) params.append('location', filters.location);
         if (filters.type && filters.type !== 'any') params.append('type', filters.type);
         if (filters.category && filters.category !== 'any') params.append('category', filters.category);
-        if (filters.budget && filters.budget !== 'any') params.append('budget', filters.budget);
+        if (filters.minBudget) params.append('minBudget', filters.minBudget);
+        if (filters.maxBudget) params.append('maxBudget', filters.maxBudget);
 
         navigate(`/listings?${params.toString()}`);
     };

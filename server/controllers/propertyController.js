@@ -67,7 +67,7 @@ exports.createProperty = async (req, res) => {
 exports.getProperties = async (req, res) => {
     try {
         console.log("getProperties req.query:", req.query);
-        const { type, category, featured, location, budget } = req.query;
+        const { type, category, featured, location, minBudget, maxBudget } = req.query;
         let query = {};
 
         if (type && type !== 'any' && type !== 'all') query.type = type;
@@ -79,20 +79,21 @@ exports.getProperties = async (req, res) => {
             query.location = { $regex: location, $options: 'i' };
         }
 
-        // Price range filtering using MongoDB queries
-        if (budget && budget !== 'any') {
-            const budgetRanges = {
-                'low': { min: 0, max: 5000000 },           // Up to 50 Lakhs
-                'medium': { min: 5000000, max: 10000000 }, // 50L - 1 Cr
-                'high': { min: 10000000, max: 50000000 },  // 1 Cr - 5 Cr
-                'luxury': { min: 50000000, max: Infinity } // Above 5 Cr
-            };
+        // Custom price range filtering
+        if (minBudget || maxBudget) {
+            query.price = {};
 
-            const range = budgetRanges[budget];
-            if (range) {
-                query.price = { $gte: range.min };
-                if (range.max !== Infinity) {
-                    query.price.$lte = range.max;
+            if (minBudget) {
+                const min = parseFloat(minBudget);
+                if (!isNaN(min)) {
+                    query.price.$gte = min;
+                }
+            }
+
+            if (maxBudget) {
+                const max = parseFloat(maxBudget);
+                if (!isNaN(max)) {
+                    query.price.$lte = max;
                 }
             }
         }

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Home, Wallet } from 'lucide-react';
+import { Search, MapPin, Home, IndianRupee } from 'lucide-react';
 
 const SearchBar = ({ onSearch }) => {
     const [filters, setFilters] = useState({
         type: 'any',
         location: '',
         category: 'any',
-        budget: 'any'
+        minBudget: '',
+        maxBudget: ''
     });
 
     const handleChange = (e) => {
@@ -20,8 +21,8 @@ const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-lg max-w-4xl mx-auto -mt-10 relative z-10 border border-gray-100">
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="bg-white p-4 rounded-lg shadow-lg max-w-6xl mx-auto -mt-10 relative z-10 border border-gray-100">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Home className="h-5 w-5 text-gray-400" />
@@ -73,25 +74,37 @@ const SearchBar = ({ onSearch }) => {
 
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Wallet className="h-5 w-5 text-gray-400" />
+                        <IndianRupee className="h-5 w-5 text-gray-400" />
                     </div>
-                    <select
-                        name="budget"
-                        className="pl-10 w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none bg-white"
-                        value={filters.budget}
+                    <input
+                        type="number"
+                        name="minBudget"
+                        placeholder="Min Budget (₹)"
+                        className="pl-10 w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        value={filters.minBudget}
                         onChange={handleChange}
-                    >
-                        <option value="any">Budget Range</option>
-                        <option value="low">Under 50L</option>
-                        <option value="medium">50L - 1 Cr</option>
-                        <option value="high">1 Cr - 2 Cr</option>
-                        <option value="luxury">Above 2 Cr</option>
-                    </select>
+                        min="0"
+                    />
+                </div>
+
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <IndianRupee className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                        type="number"
+                        name="maxBudget"
+                        placeholder="Max Budget (₹)"
+                        className="pl-10 w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        value={filters.maxBudget}
+                        onChange={handleChange}
+                        min="0"
+                    />
                 </div>
 
                 <button
                     type="submit"
-                    className="bg-green-700 text-white font-bold py-3 px-6 rounded-md hover:bg-green-800 transition-colors flex items-center justify-center col-span-1 md:col-span-4 lg:col-span-1"
+                    className="bg-green-700 text-white font-bold py-3 px-6 rounded-md hover:bg-green-800 transition-colors flex items-center justify-center col-span-1 md:col-span-2 lg:col-span-1"
                 >
                     <Search className="h-5 w-5 mr-2" />
                     Search
