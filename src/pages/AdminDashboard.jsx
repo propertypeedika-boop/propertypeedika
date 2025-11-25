@@ -22,6 +22,7 @@ const AdminDashboard = () => {
         baths: '',
         area: '',
         amenities: '',
+        externalLink: '',
         featured: false
     });
     const [enquiries, setEnquiries] = useState([]);
@@ -109,6 +110,7 @@ const AdminDashboard = () => {
                 baths: property.specs?.baths || '',
                 area: property.specs?.area || '',
                 amenities: property.amenities ? property.amenities.join(', ') : '',
+                externalLink: property.externalLink || '',
                 featured: property.featured
             });
         } else {
@@ -124,6 +126,7 @@ const AdminDashboard = () => {
                 baths: '',
                 area: '',
                 amenities: '',
+                externalLink: '',
                 featured: false
             });
         }
@@ -161,6 +164,7 @@ const AdminDashboard = () => {
                 area: formData.area
             },
             amenities: formData.amenities.split(',').map(item => item.trim()).filter(item => item !== ''),
+            externalLink: formData.externalLink || null,
             featured: formData.featured
         };
 
@@ -432,6 +436,18 @@ const AdminDashboard = () => {
                                                 Ready to upload {images.length} image{images.length !== 1 ? 's' : ''}
                                             </p>
                                         )}
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">External Link (Optional)</label>
+                                        <input
+                                            type="url"
+                                            name="externalLink"
+                                            value={formData.externalLink}
+                                            onChange={handleInputChange}
+                                            placeholder="https://example.com/property"
+                                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500">Add a link if this property is listed on another website (e.g., 99acres, MagicBricks)</p>
                                     </div>
                                     <div className="flex items-center">
                                         <input type="checkbox" name="featured" checked={formData.featured} onChange={handleInputChange} className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" />

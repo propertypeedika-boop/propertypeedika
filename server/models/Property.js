@@ -48,6 +48,11 @@ const propertySchema = new mongoose.Schema({
     images: [{
         type: String
     }],
+    externalLink: {
+        type: String,
+        trim: true,
+        default: null
+    },
     featured: {
         type: Boolean,
         default: false
