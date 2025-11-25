@@ -21,7 +21,7 @@ const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-lg max-w-6xl mx-auto -mt-10 relative z-10 border border-gray-100">
+        <div className="glass-card p-6 rounded-xl shadow-lg max-w-6xl mx-auto -mt-10 relative z-10">
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
