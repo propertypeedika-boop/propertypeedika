@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 import { enquiryAPI } from '../services/api';
+import { sendEmail } from '../services/emailService';
 
 const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
     const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
         phone: '',
         message: ''
     });
+    const [sending, setSending] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,13 +19,30 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSending(true);
         try {
+            // 1. Save to database
             await enquiryAPI.create({ ...formData, propertyId });
+
+            // 2. Send email notification
+            const templateParams = {
+                to_name: "Admin",
+                from_name: formData.name,
+                from_email: formData.email,
+                phone: formData.phone,
+                message: formData.message,
+                property_id: propertyId ? `Property ID: ${propertyId}` : 'General Enquiry'
+            };
+
+            await sendEmail(templateParams);
+
             alert(`Thank you, ${formData.name}! We have received your message. We will contact you shortly.`);
             setFormData({ name: '', email: '', phone: '', message: '' });
         } catch (error) {
             console.error("Error sending enquiry:", error);
             alert("Failed to send message. Please try again.");
+        } finally {
+            setSending(false);
         }
     };
 
@@ -89,10 +108,11 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
 
                 <button
                     type="submit"
-                    className="w-full bg-green-700 text-white font-bold py-3 px-4 rounded-md hover:bg-green-800 transition-colors flex items-center justify-center"
+                    disabled={sending}
+                    className={`w-full bg-green-700 text-white font-bold py-3 px-4 rounded-md hover:bg-green-800 transition-colors flex items-center justify-center ${sending ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
                     <Send className="h-4 w-4 mr-2" />
-                    Send Message
+                    {sending ? 'Sending...' : 'Send Message'}
                 </button>
             </form>
         </div>
