@@ -30,6 +30,7 @@ export const authAPI = {
 export const propertyAPI = {
     getAll: (params) => api.get('/properties', { params }),
     getOne: (id) => api.get(`/properties/${id}`),
+    getSimilar: (id) => api.get(`/properties/similar/${id}`),
     create: (data) => {
         // Handle FormData for file uploads
         if (data instanceof FormData) {

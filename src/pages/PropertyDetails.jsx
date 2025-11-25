@@ -2,8 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { propertyAPI } from '../services/api';
 import ContactForm from '../components/ContactForm';
-import { MapPin, Bed, Bath, Square, Check, ArrowLeft, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
+import SEO from '../components/SEO';
+import PropertyCard from '../components/PropertyCard';
+import { MapPin, Bed, Bath, Square, Check, ArrowLeft, ChevronLeft, ChevronRight, Camera, Heart, MessageCircle, Share2 } from 'lucide-react';
 import { formatPrice } from '../utils/formatPrice';
+import {
+    FacebookShareButton,
+    TwitterShareButton,
+    WhatsappShareButton,
+    FacebookIcon,
+    TwitterIcon,
+    WhatsappIcon
+} from "react-share";
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix Leaflet icon issue
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 const PropertyDetails = () => {
     const { id } = useParams();
@@ -11,12 +37,18 @@ const PropertyDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [similarProperties, setSimilarProperties] = useState([]);
 
     useEffect(() => {
         const fetchProperty = async () => {
             try {
                 const response = await propertyAPI.getOne(id);
                 setProperty(response.data);
+
+                // Fetch similar properties
+                const similarResponse = await propertyAPI.getSimilar(id);
+                setSimilarProperties(similarResponse.data);
             } catch (err) {
                 console.error("Error fetching property:", err);
                 setError("Property not found");
@@ -27,6 +59,23 @@ const PropertyDetails = () => {
 
         fetchProperty();
     }, [id]);
+
+    useEffect(() => {
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        setIsFavorite(favorites.includes(id));
+    }, [id]);
+
+    const toggleFavorite = () => {
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let newFavorites;
+        if (favorites.includes(id)) {
+            newFavorites = favorites.filter(favId => favId !== id);
+        } else {
+            newFavorites = [...favorites, id];
+        }
+        localStorage.setItem('favorites', JSON.stringify(newFavorites));
+        setIsFavorite(!isFavorite);
+    };
 
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -46,6 +95,7 @@ const PropertyDetails = () => {
     // Get images or use placeholder
     const images = property.images && property.images.length > 0 ? property.images : ['https://via.placeholder.com/800x400'];
     const mainImage = images[currentImageIndex];
+    const shareUrl = window.location.href;
 
     const handlePrevImage = () => {
         setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -61,6 +111,12 @@ const PropertyDetails = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
+            <SEO
+                title={property.title}
+                description={property.description.substring(0, 150)}
+                image={mainImage}
+            />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Link to="/listings" className="inline-flex items-center text-gray-600 hover:text-green-700 mb-6 transition-colors">
                     <ArrowLeft className="h-4 w-4 mr-2" />
@@ -75,6 +131,14 @@ const PropertyDetails = () => {
                                 alt={`${property.title} - Image ${currentImageIndex + 1}`}
                                 className="w-full h-[400px] object-cover"
                             />
+
+                            <button
+                                onClick={toggleFavorite}
+                                className="absolute top-4 right-4 z-20 p-3 rounded-full bg-white/90 hover:bg-white text-gray-600 hover:text-red-500 transition-all duration-300 shadow-md"
+                                aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                            >
+                                <Heart className={`h-6 w-6 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+                            </button>
 
                             {/* Navigation arrows - only show if multiple images */}
                             {images.length > 1 && (
@@ -95,7 +159,7 @@ const PropertyDetails = () => {
                                     </button>
 
                                     {/* Image counter */}
-                                    <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+                                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
                                         <Camera className="h-4 w-4" />
                                         {currentImageIndex + 1} / {images.length}
                                     </div>
@@ -130,9 +194,9 @@ const PropertyDetails = () => {
                                         {property.location}
                                     </div>
                                 </div>
-                                <div className="mt-4 md:mt-0">
+                                <div className="mt-4 md:mt-0 text-right">
                                     <span className="block text-3xl font-bold text-green-700">{formatPrice(property.price)}</span>
-                                    <span className="block text-right text-gray-500 text-sm">For {property.type}</span>
+                                    <span className="block text-gray-500 text-sm">For {property.type}</span>
                                 </div>
                             </div>
 
@@ -181,6 +245,31 @@ const PropertyDetails = () => {
                                 </div>
                             </div>
 
+                            {/* Map Section */}
+                            {property.coordinates && property.coordinates.lat && property.coordinates.lng && (
+                                <div className="mt-8 pt-8 border-t border-gray-200">
+                                    <h2 className="text-xl font-bold text-gray-900 mb-4">Location</h2>
+                                    <div className="h-[400px] rounded-lg overflow-hidden shadow-sm border border-gray-200 z-0">
+                                        <MapContainer
+                                            center={[property.coordinates.lat, property.coordinates.lng]}
+                                            zoom={13}
+                                            scrollWheelZoom={false}
+                                            style={{ height: '100%', width: '100%' }}
+                                        >
+                                            <TileLayer
+                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            />
+                                            <Marker position={[property.coordinates.lat, property.coordinates.lng]}>
+                                                <Popup>
+                                                    {property.title} <br /> {property.location}
+                                                </Popup>
+                                            </Marker>
+                                        </MapContainer>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* External Link Button - shows if property is listed on another site */}
                             {property.externalLink && (
                                 <div className="mt-8 pt-8 border-t border-gray-200">
@@ -199,11 +288,54 @@ const PropertyDetails = () => {
                                     <p className="text-sm text-gray-500 mt-2">This property is also listed on another platform</p>
                                 </div>
                             )}
+
+                            {/* Similar Properties Section */}
+                            {similarProperties.length > 0 && (
+                                <div className="mt-12 pt-8 border-t border-gray-200">
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {similarProperties.map(prop => (
+                                            <PropertyCard key={prop._id} property={prop} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="lg:col-span-1">
-                        <div className="sticky top-24">
+                        <div className="sticky top-24 space-y-6">
+                            {/* Action Buttons */}
+                            <div className="bg-white rounded-lg shadow-sm p-6">
+                                <a
+                                    href={`https://wa.me/?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-lg transition-colors mb-4 shadow-sm"
+                                >
+                                    <MessageCircle className="h-5 w-5 mr-2" />
+                                    Chat on WhatsApp
+                                </a>
+
+                                <div className="border-t border-gray-100 pt-4">
+                                    <p className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+                                        <Share2 className="h-4 w-4 mr-2" />
+                                        Share this Property
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <WhatsappShareButton url={shareUrl} title={property.title}>
+                                            <WhatsappIcon size={40} round />
+                                        </WhatsappShareButton>
+                                        <FacebookShareButton url={shareUrl} quote={property.title}>
+                                            <FacebookIcon size={40} round />
+                                        </FacebookShareButton>
+                                        <TwitterShareButton url={shareUrl} title={property.title}>
+                                            <TwitterIcon size={40} round />
+                                        </TwitterShareButton>
+                                    </div>
+                                </div>
+                            </div>
+
                             <ContactForm title="Interested in this property?" propertyId={property._id} />
                         </div>
                     </div>

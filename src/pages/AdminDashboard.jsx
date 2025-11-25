@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { propertyAPI, authAPI, enquiryAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, LogOut, X } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, X, LayoutDashboard, MessageSquare } from 'lucide-react';
 
 const AdminDashboard = () => {
     const [properties, setProperties] = useState([]);
@@ -23,7 +23,9 @@ const AdminDashboard = () => {
         area: '',
         amenities: '',
         externalLink: '',
-        featured: false
+        featured: false,
+        lat: '',
+        lng: ''
     });
     const [enquiries, setEnquiries] = useState([]);
     const [activeTab, setActiveTab] = useState('properties');
@@ -111,7 +113,9 @@ const AdminDashboard = () => {
                 area: property.specs?.area || '',
                 amenities: property.amenities ? property.amenities.join(', ') : '',
                 externalLink: property.externalLink || '',
-                featured: property.featured
+                featured: property.featured,
+                lat: property.coordinates?.lat || '',
+                lng: property.coordinates?.lng || ''
             });
         } else {
             setEditingProperty(null);
@@ -127,7 +131,9 @@ const AdminDashboard = () => {
                 area: '',
                 amenities: '',
                 externalLink: '',
-                featured: false
+                featured: false,
+                lat: '',
+                lng: ''
             });
         }
         setImages([]);
@@ -165,7 +171,11 @@ const AdminDashboard = () => {
             },
             amenities: formData.amenities.split(',').map(item => item.trim()).filter(item => item !== ''),
             externalLink: formData.externalLink || null,
-            featured: formData.featured
+            featured: formData.featured,
+            coordinates: {
+                lat: formData.lat ? parseFloat(formData.lat) : null,
+                lng: formData.lng ? parseFloat(formData.lng) : null
+            }
         };
 
         data.append('data', JSON.stringify(propertyData));
@@ -227,6 +237,44 @@ const AdminDashboard = () => {
 
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="px-4 py-6 sm:px-0">
+                    {/* Summary Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div className="bg-white overflow-hidden shadow rounded-lg">
+                            <div className="p-5">
+                                <div className="flex items-center">
+                                    <div className="flex-shrink-0">
+                                        <LayoutDashboard className="h-6 w-6 text-gray-400" />
+                                    </div>
+                                    <div className="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt className="text-sm font-medium text-gray-500 truncate">Total Properties</dt>
+                                            <dd>
+                                                <div className="text-lg font-medium text-gray-900">{properties.length}</div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white overflow-hidden shadow rounded-lg">
+                            <div className="p-5">
+                                <div className="flex items-center">
+                                    <div className="flex-shrink-0">
+                                        <MessageSquare className="h-6 w-6 text-gray-400" />
+                                    </div>
+                                    <div className="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt className="text-sm font-medium text-gray-500 truncate">Total Enquiries</dt>
+                                            <dd>
+                                                <div className="text-lg font-medium text-gray-900">{enquiries.length}</div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {activeTab === 'properties' ? (
                         <>
                             <div className="flex justify-between items-center mb-6">
@@ -381,6 +429,16 @@ const AdminDashboard = () => {
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700">Location</label>
                                             <input type="text" name="location" value={formData.location} onChange={handleInputChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">Latitude (Optional)</label>
+                                            <input type="number" step="any" name="lat" value={formData.lat} onChange={handleInputChange} placeholder="e.g. 10.015" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">Longitude (Optional)</label>
+                                            <input type="number" step="any" name="lng" value={formData.lng} onChange={handleInputChange} placeholder="e.g. 76.342" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">

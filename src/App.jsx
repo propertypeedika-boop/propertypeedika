@@ -8,7 +8,7 @@ import PropertyDetails from './pages/PropertyDetails';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
+import Favorites from './pages/Favorites';
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/listings" element={<Listings />} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="/property/:id" element={<PropertyDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />

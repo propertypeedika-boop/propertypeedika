@@ -181,3 +181,24 @@ exports.deleteProperty = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// @desc   Get similar properties
+// @route  GET /api/properties/similar/:id
+// @access Public
+exports.getSimilarProperties = async (req, res) => {
+    try {
+        const property = await Property.findById(req.params.id);
+        if (!property) return res.status(404).json({ message: 'Property not found' });
+
+        const similar = await Property.find({
+            _id: { $ne: property._id },
+            category: property.category,
+            type: property.type
+        }).limit(3);
+
+        res.json(similar);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};

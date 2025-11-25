@@ -18,6 +18,16 @@ const propertySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    coordinates: {
+        lat: {
+            type: Number,
+            default: null
+        },
+        lng: {
+            type: Number,
+            default: null
+        }
+    },
     type: {
         type: String,
         enum: ['sale', 'rent'],

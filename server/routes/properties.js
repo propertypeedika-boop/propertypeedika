@@ -5,13 +5,17 @@ const {
     getProperty,
     createProperty,
     updateProperty,
-    deleteProperty
+    deleteProperty,
+    getSimilarProperties
 } = require('../controllers/propertyController');
 const auth = require('../middleware/auth');
 const { upload } = require('../config/cloudinary');
 
 // Get all properties (public)
 router.get('/', getProperties);
+
+// Get similar properties (public)
+router.get('/similar/:id', getSimilarProperties);
 
 // Get single property (public)
 router.get('/:id', getProperty);
