@@ -6,7 +6,7 @@ const connectDB = require('./config/db');
 const app = express();
 
 // Connect to MongoDB
-connectDB();
+connectDB().catch(err => console.error("MongoDB Connection Error:", err));
 
 // Middleware
 app.use(cors());
