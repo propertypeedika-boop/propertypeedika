@@ -50,8 +50,8 @@ const Hero = () => {
                 ))}
 
                 <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center px-4">
-                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
-                        Find Your Dream Home in <span className="text-green-400">Trivandrum</span>
+                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg" style={{ fontFamily: 'var(--font-heading)' }}>
+                        Find Your Dream Home in <span className="text-[var(--primary-green-light)]">Trivandrum</span>
                     </h1>
                     <p className="text-xl text-gray-100 max-w-2xl drop-shadow-md mb-8">
                         Discover the best apartments, villas, and plots for sale and rent in the capital city.

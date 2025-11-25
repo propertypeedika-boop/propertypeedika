@@ -6,7 +6,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="bg-white shadow-md sticky top-0 z-50">
+        <nav className="glass-navbar sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
@@ -21,10 +21,10 @@ const Navbar = () => {
                     </div>
 
                     <div className="hidden md:flex items-center space-x-8">
-                        <Link to="/" className="text-gray-700 hover:text-green-700 font-medium transition-colors">Home</Link>
-                        <Link to="/listings" className="text-gray-700 hover:text-green-700 font-medium transition-colors">Listings</Link>
-                        <Link to="/about" className="text-gray-700 hover:text-green-700 font-medium transition-colors">About</Link>
-                        <Link to="/contact" className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition-colors">Contact Us</Link>
+                        <Link to="/" className="text-gray-700 hover:text-[var(--primary-green)] font-medium transition-colors">Home</Link>
+                        <Link to="/listings" className="text-gray-700 hover:text-[var(--primary-green)] font-medium transition-colors">Listings</Link>
+                        <Link to="/about" className="text-gray-700 hover:text-[var(--primary-green)] font-medium transition-colors">About</Link>
+                        <Link to="/contact" className="bg-[var(--primary-green)] text-white px-4 py-2 rounded-md hover:bg-[var(--primary-green-dark)] transition-colors">Contact Us</Link>
                     </div>
 
                     <div className="md:hidden flex items-center">

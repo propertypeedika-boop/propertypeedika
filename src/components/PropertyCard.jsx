@@ -21,7 +21,7 @@ const PropertyCard = ({ property }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+        <div className="glass-card rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
             <div className="relative h-64 group">
                 <img
                     src={images[currentImageIndex]}
@@ -55,10 +55,10 @@ const PropertyCard = ({ property }) => {
                     </>
                 )}
 
-                <div className="absolute top-4 left-4 bg-green-700 text-white px-3 py-1 rounded-md text-sm font-semibold">
+                <div className="absolute top-4 left-4 bg-[var(--primary-green)] text-white px-3 py-1 rounded-md text-sm font-semibold">
                     For {property.type}
                 </div>
-                <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md text-green-700 font-bold">
+                <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-md text-[var(--primary-green)] font-bold">
                     {formatPrice(property.price)}
                 </div>
             </div>
@@ -74,25 +74,25 @@ const PropertyCard = ({ property }) => {
                 <div className="flex justify-between border-t border-gray-100 pt-4 mb-4">
                     {property.specs?.beds > 0 && (
                         <div className="flex items-center text-gray-600">
-                            <Bed className="h-4 w-4 mr-2 text-green-500" />
+                            <Bed className="h-4 w-4 mr-2 text-[var(--primary-green)]" />
                             <span className="text-sm">{property.specs.beds} Beds</span>
                         </div>
                     )}
                     {property.specs?.baths > 0 && (
                         <div className="flex items-center text-gray-600">
-                            <Bath className="h-4 w-4 mr-2 text-green-500" />
+                            <Bath className="h-4 w-4 mr-2 text-[var(--primary-green)]" />
                             <span className="text-sm">{property.specs.baths} Baths</span>
                         </div>
                     )}
                     <div className="flex items-center text-gray-600">
-                        <Square className="h-4 w-4 mr-2 text-green-500" />
+                        <Square className="h-4 w-4 mr-2 text-[var(--primary-green)]" />
                         <span className="text-sm">{property.specs?.area}</span>
                     </div>
                 </div>
 
                 <Link
                     to={`/property/${id}`}
-                    className="w-full flex items-center justify-center bg-gray-50 hover:bg-green-50 text-green-700 font-semibold py-3 rounded-md transition-colors border border-green-100 hover:border-green-200"
+                    className="w-full flex items-center justify-center bg-gray-50 hover:bg-[var(--primary-green-light)] text-[var(--primary-green)] font-semibold py-3 rounded-md transition-colors border border-[var(--primary-green-light)] hover:border-[var(--primary-green)]"
                 >
                     View Details <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
