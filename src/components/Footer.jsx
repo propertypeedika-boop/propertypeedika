@@ -93,6 +93,27 @@ const Footer = () => {
                     </div>
                 </div>
 
+                {/* Google Maps Section */}
+                <div className="mt-12">
+                    <h4 className="text-lg font-semibold mb-4 text-center">Find Us</h4>
+                    <div className="glass-card rounded-xl overflow-hidden" style={{ height: '300px' }}>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.6891234567!2d76.9474!3d8.5241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzEnMjYuOCJOIDc2wrA1Nic1MC42IkU!5e0!3m2!1sen!2sin!4v1234567890"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            allowFullScreen=""
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="PropertyPeedika Office Location"
+                        ></iframe>
+                    </div>
+                    <p className="text-center text-gray-400 text-sm mt-3">
+                        <MapPin className="h-4 w-4 inline mr-1 text-green-400" />
+                        TC 12/345, Kowdiar Main Road, Trivandrum, Kerala 695003
+                    </p>
+                </div>
+
                 <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
                     <p>&copy; {new Date().getFullYear()} PropertyPeedika. All rights reserved.</p>
                 </div>
