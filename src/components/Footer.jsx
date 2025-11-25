@@ -13,10 +13,42 @@ const Footer = () => {
                             Your trusted partner for finding the perfect home in Trivandrum. We specialize in sales, rentals, and property management.
                         </p>
                         <div className="flex space-x-4">
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors"><Facebook size={20} /></a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors"><Twitter size={20} /></a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors"><Instagram size={20} /></a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors"><Linkedin size={20} /></a>
+                            <a
+                                href="https://www.facebook.com/propertypeedika"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-white transition-colors"
+                                aria-label="Visit our Facebook page"
+                            >
+                                <Facebook size={20} />
+                            </a>
+                            <a
+                                href="https://twitter.com/propertypeedika"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-white transition-colors"
+                                aria-label="Visit our Twitter page"
+                            >
+                                <Twitter size={20} />
+                            </a>
+                            <a
+                                href="https://www.instagram.com/propertypeedika"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-white transition-colors"
+                                aria-label="Visit our Instagram page"
+                            >
+                                <Instagram size={20} />
+                            </a>
+                            <a
+                                href="https://www.linkedin.com/company/propertypeedika"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 hover:text-white transition-colors"
+                                aria-label="Visit our LinkedIn page"
+                            >
+                                <Linkedin size={20} />
+                            </a>
                         </div>
                     </div>
 
