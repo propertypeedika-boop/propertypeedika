@@ -21,4 +21,30 @@ router.get('/verify', auth, async (req, res) => {
     }
 });
 
+// TEMPORARY: Reset Admin Password
+const bcrypt = require('bcryptjs');
+router.get('/reset-admin-force', async (req, res) => {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash('admin123', salt);
+
+        let user = await User.findOne({ username: 'admin' });
+        if (user) {
+            user.password = hashedPassword;
+            await user.save();
+            res.send('Admin password reset to: admin123');
+        } else {
+            await User.create({
+                username: 'admin',
+                password: hashedPassword,
+                role: 'admin'
+            });
+            res.send('Admin user created with password: admin123');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err.message);
+    }
+});
+
 module.exports = router;
