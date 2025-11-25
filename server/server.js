@@ -15,10 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/properties', require('./routes/properties'));
-app.use('/api/enquiries', require('./routes/enquiries'));
-app.use('/api/settings', require('./routes/settings'));
+// app.use('/api/auth', require('./routes/auth'));
+// app.use('/api/properties', require('./routes/properties'));
+// app.use('/api/enquiries', require('./routes/enquiries'));
+// app.use('/api/settings', require('./routes/settings'));
 
 // Health check
 app.get('/api/health', (req, res) => {
