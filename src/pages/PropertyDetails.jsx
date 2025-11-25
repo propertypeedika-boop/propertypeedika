@@ -113,8 +113,8 @@ const PropertyDetails = () => {
                                         alt={`${property.title} ${idx + 1}`}
                                         onClick={() => handleThumbnailClick(idx)}
                                         className={`w-full h-24 object-cover rounded-lg cursor-pointer transition-all duration-300 ${idx === currentImageIndex
-                                                ? 'ring-4 ring-green-500 opacity-100 scale-105'
-                                                : 'hover:opacity-75 hover:scale-105'
+                                            ? 'ring-4 ring-green-500 opacity-100 scale-105'
+                                            : 'hover:opacity-75 hover:scale-105'
                                             }`}
                                     />
                                 ))}
@@ -180,6 +180,25 @@ const PropertyDetails = () => {
                                     ))}
                                 </div>
                             </div>
+
+                            {/* External Link Button - shows if property is listed on another site */}
+                            {property.externalLink && (
+                                <div className="mt-8 pt-8 border-t border-gray-200">
+                                    <h2 className="text-xl font-bold text-gray-900 mb-4">View on Other Platform</h2>
+                                    <a
+                                        href={property.externalLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center bg-[var(--primary-green)] text-white font-semibold px-8 py-4 rounded-lg transition-all hover:bg-[var(--primary-green-dark)] hover:shadow-lg"
+                                    >
+                                        <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        View on External Site
+                                    </a>
+                                    <p className="text-sm text-gray-500 mt-2">This property is also listed on another platform</p>
+                                </div>
+                            )}
                         </div>
                     </div>
 

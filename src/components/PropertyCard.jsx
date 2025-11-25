@@ -90,21 +90,6 @@ const PropertyCard = ({ property }) => {
                     </div>
                 </div>
 
-                {/* External Link Button - shows if property is listed on another site */}
-                {property.externalLink && (
-                    <a
-                        href={property.externalLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center bg-[var(--primary-green)] text-white font-semibold py-3 rounded-md transition-colors hover:bg-[var(--primary-green-dark)] mb-2"
-                    >
-                        <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                        View on External Site
-                    </a>
-                )}
-
                 <Link
                     to={`/property/${id}`}
                     className="w-full flex items-center justify-center bg-gray-50 hover:bg-[var(--primary-green-light)] text-[var(--primary-green)] font-semibold py-3 rounded-md transition-colors border border-[var(--primary-green-light)] hover:border-[var(--primary-green)]"
