@@ -57,4 +57,9 @@ export const enquiryAPI = {
     delete: (id) => api.delete(`/enquiries/${id}`),
 };
 
+export const settingsAPI = {
+    get: () => api.get('/settings'),
+    update: (data) => api.put('/settings', data),
+};
+
 export default api;

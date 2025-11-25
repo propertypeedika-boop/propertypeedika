@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { propertyAPI } from '../services/api';
+import { propertyAPI, settingsAPI } from '../services/api';
 import ContactForm from '../components/ContactForm';
 import SEO from '../components/SEO';
 import PropertyCard from '../components/PropertyCard';
@@ -39,6 +39,21 @@ const PropertyDetails = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isFavorite, setIsFavorite] = useState(false);
     const [similarProperties, setSimilarProperties] = useState([]);
+    const [whatsappNumber, setWhatsappNumber] = useState('919876543210'); // Default fallback
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await settingsAPI.get();
+                if (response.data && response.data.whatsappNumber) {
+                    setWhatsappNumber(response.data.whatsappNumber);
+                }
+            } catch (error) {
+                console.error("Error fetching settings:", error);
+            }
+        };
+        fetchSettings();
+    }, []);
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -308,7 +323,7 @@ const PropertyDetails = () => {
                             {/* Action Buttons */}
                             <div className="bg-white rounded-lg shadow-sm p-6">
                                 <a
-                                    href={`https://wa.me/?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
+                                    href={`https://wa.me/${whatsappNumber}?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-lg transition-colors mb-4 shadow-sm"
