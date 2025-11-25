@@ -31,7 +31,7 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
                 from_email: formData.email,
                 phone: formData.phone,
                 message: formData.message,
-                property_id: propertyId ? `Property Link: ${window.location.href}` : 'General Enquiry'
+                property_id: propertyId ? `Property Link: https://propertypeedika.vercel.app/property/${propertyId}` : 'General Enquiry'
             };
 
             await sendEmail(templateParams);
