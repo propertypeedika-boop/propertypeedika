@@ -5,7 +5,6 @@ const Enquiry = require('../models/Enquiry');
 // @access Public
 exports.createEnquiry = async (req, res) => {
     try {
-        console.log("createEnquiry called with body:", req.body);
         const { name, email, phone, message, propertyId } = req.body;
 
         const enquiry = await Enquiry.create({
@@ -15,7 +14,6 @@ exports.createEnquiry = async (req, res) => {
             message,
             property: propertyId || null
         });
-        console.log("Enquiry created:", enquiry);
 
         res.status(201).json(enquiry);
     } catch (err) {
@@ -29,11 +27,9 @@ exports.createEnquiry = async (req, res) => {
 // @access Private (admin)
 exports.getEnquiries = async (req, res) => {
     try {
-        console.log("getEnquiries called");
         const enquiries = await Enquiry.find()
-            .populate('property', 'title') // Populate property title
+            .populate('property', 'title')
             .sort({ createdAt: -1 });
-        console.log("Enquiries found:", enquiries.length);
         res.json(enquiries);
     } catch (err) {
         console.error("Error fetching enquiries:", err);

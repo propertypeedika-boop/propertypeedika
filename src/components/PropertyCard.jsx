@@ -47,6 +47,7 @@ const PropertyCard = ({ property }) => {
                     src={images[currentImageIndex]}
                     alt={`${property.title} - Image ${currentImageIndex + 1}`}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
                 />
 
                 <button

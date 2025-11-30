@@ -13,10 +13,10 @@ const Home = () => {
         const fetchProperties = async () => {
             try {
                 const response = await propertyAPI.getAll({ featured: true });
-                // Limit to 3 if the API returns more, or rely on API to filter.
-                // The API currently filters by featured=true but returns all of them.
-                // We'll slice here just in case.
-                setFeaturedProperties(response.data.slice(0, 3));
+                // Handle both old format (array) and new format (object with properties)
+                const propertiesData = response.data.properties || response.data;
+                const featuredList = Array.isArray(propertiesData) ? propertiesData : [];
+                setFeaturedProperties(featuredList.slice(0, 3));
             } catch (error) {
                 console.error("Error fetching properties:", error);
             } finally {

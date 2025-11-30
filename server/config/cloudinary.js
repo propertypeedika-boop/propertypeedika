@@ -1,7 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
-
 const fs = require('fs');
 const path = require('path');
 
@@ -18,12 +17,24 @@ if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && proce
         cloudinary: cloudinary,
         params: {
             folder: 'propertypeedika',
-            allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-            transformation: [{ width: 1920, height: 1080, crop: 'limit' }]
+            allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
+            transformation: [
+                {
+                    width: 1920,
+                    height: 1080,
+                    crop: 'limit',
+                    quality: 'auto:good', // Automatic quality optimization
+                    fetch_format: 'auto', // Automatic format selection (WebP, AVIF)
+                    flags: 'progressive' // Progressive JPEG loading
+                }
+            ]
         }
     });
+
+    console.log('✅ Cloudinary configured with optimizations');
 } else {
-    console.log('Cloudinary credentials missing, using local storage');
+    console.warn('⚠️  Cloudinary credentials missing, using local storage');
+
     // Ensure uploads directory exists
     const uploadDir = 'uploads';
     if (!fs.existsSync(uploadDir)) {
@@ -44,8 +55,17 @@ if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && proce
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+        files: 10 // Maximum 10 files per upload
+    },
+    fileFilter: (req, file, cb) => {
+        // Accept images only
+        if (!file.mimetype.startsWith('image/')) {
+            return cb(new Error('Only image files are allowed!'), false);
+        }
+        cb(null, true);
     }
 });
 
 module.exports = { cloudinary, upload };
+

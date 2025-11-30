@@ -19,10 +19,7 @@ const Listings = () => {
         };
     });
 
-    console.log("Listings Render: location.search =", location.search);
-
     useEffect(() => {
-        console.log("Listings: Location changed", location.search);
         const searchParams = new URLSearchParams(location.search);
         const typeParam = searchParams.get('type');
         const categoryParam = searchParams.get('category');
@@ -37,7 +34,6 @@ const Listings = () => {
             minBudget: minBudgetParam || '',
             maxBudget: maxBudgetParam || ''
         };
-        console.log("Listings: Setting filters from URL", newFilters);
 
         setFilters(prev => ({
             ...prev,
@@ -47,7 +43,6 @@ const Listings = () => {
 
     useEffect(() => {
         const fetchProperties = async () => {
-            console.log("Listings: fetchProperties called with filters", filters);
             setLoading(true);
             try {
                 // Prepare params for API
@@ -58,10 +53,11 @@ const Listings = () => {
                 if (filters.minBudget) params.minBudget = filters.minBudget;
                 if (filters.maxBudget) params.maxBudget = filters.maxBudget;
 
-                console.log("Listings: Sending API request with params", params);
                 const response = await propertyAPI.getAll(params);
-                console.log("Listings: API response length", response.data.length);
-                setProperties(response.data);
+
+                // Handle both old format (array) and new format (object with properties)
+                const propertiesData = response.data.properties || response.data;
+                setProperties(Array.isArray(propertiesData) ? propertiesData : []);
             } catch (error) {
                 console.error("Error fetching properties:", error);
             } finally {
@@ -70,7 +66,7 @@ const Listings = () => {
         };
 
         fetchProperties();
-    }, [filters.type, filters.category, filters.location, filters.minBudget, filters.maxBudget]); // Re-fetch when API-supported filters change
+    }, [filters.type, filters.category, filters.location, filters.minBudget, filters.maxBudget]);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;

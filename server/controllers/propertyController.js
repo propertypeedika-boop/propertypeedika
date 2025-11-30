@@ -1,19 +1,14 @@
-// controllers/propertyController.js
 const Property = require('../models/Property');
 const cloudinary = require('../config/cloudinary');
 const mongoose = require('mongoose');
 
-// @desc   Create a new property
-// @route  POST /api/properties
-// @access Private (admin)
-// @desc   Create a new property
-// @route  POST /api/properties
-// @access Private (admin)
+/**
+ * @desc   Create a new property
+ * @route  POST /api/properties
+ * @access Private (admin)
+ */
 exports.createProperty = async (req, res) => {
     try {
-        console.log("createProperty called");
-        console.log("req.body:", req.body);
-        console.log("req.files:", req.files);
 
         // If data is sent as a JSON string in a 'data' field (common with some setups), parse it.
         // Otherwise, use req.body directly.
@@ -58,16 +53,25 @@ exports.createProperty = async (req, res) => {
     }
 };
 
-// @desc   Get all properties
-// @route  GET /api/properties
-// @access Public
-// @desc   Get all properties
-// @route  GET /api/properties
-// @access Public
+/**
+ * @desc   Get all properties with filtering and pagination
+ * @route  GET /api/properties
+ * @access Public
+ */
 exports.getProperties = async (req, res) => {
     try {
-        console.log("getProperties req.query:", req.query);
-        const { type, category, featured, location, minBudget, maxBudget } = req.query;
+        const {
+            type,
+            category,
+            featured,
+            location,
+            minBudget,
+            maxBudget,
+            page = 1,
+            limit = 12,
+            sort = '-createdAt'
+        } = req.query;
+
         let query = {};
 
         if (type && type !== 'any' && type !== 'all') query.type = type;
@@ -98,20 +102,42 @@ exports.getProperties = async (req, res) => {
             }
         }
 
-        console.log("Final Mongo Query:", query);
+        // Pagination
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
 
-        const properties = await Property.find(query).sort({ createdAt: -1 });
+        // Execute query with pagination
+        const [properties, total] = await Promise.all([
+            Property.find(query)
+                .sort(sort)
+                .limit(limitNum)
+                .skip(skip)
+                .lean(), // Use lean() for better performance
+            Property.countDocuments(query)
+        ]);
 
-        res.json(properties);
+        res.json({
+            properties,
+            pagination: {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                pages: Math.ceil(total / limitNum),
+                hasMore: skip + properties.length < total
+            }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-// @desc   Get single property by ID
-// @route  GET /api/properties/:id
-// @access Public
+/**
+ * @desc   Get single property by ID
+ * @route  GET /api/properties/:id
+ * @access Public
+ */
 exports.getProperty = async (req, res) => {
     try {
         const property = await Property.findById(req.params.id);
@@ -123,12 +149,11 @@ exports.getProperty = async (req, res) => {
     }
 };
 
-// @desc   Update property
-// @route  PUT /api/properties/:id
-// @access Private (admin)
-// @desc   Update property
-// @route  PUT /api/properties/:id
-// @access Private (admin)
+/**
+ * @desc   Update property
+ * @route  PUT /api/properties/:id
+ * @access Private (admin)
+ */
 exports.updateProperty = async (req, res) => {
     try {
         let updates = req.body;
@@ -168,9 +193,11 @@ exports.updateProperty = async (req, res) => {
     }
 };
 
-// @desc   Delete property
-// @route  DELETE /api/properties/:id
-// @access Private (admin)
+/**
+ * @desc   Delete property
+ * @route  DELETE /api/properties/:id
+ * @access Private (admin)
+ */
 exports.deleteProperty = async (req, res) => {
     try {
         const property = await Property.findByIdAndDelete(req.params.id);
@@ -182,9 +209,11 @@ exports.deleteProperty = async (req, res) => {
     }
 };
 
-// @desc   Get similar properties
-// @route  GET /api/properties/similar/:id
-// @access Public
+/**
+ * @desc   Get similar properties based on category and type
+ * @route  GET /api/properties/similar/:id
+ * @access Public
+ */
 exports.getSimilarProperties = async (req, res) => {
     try {
         const property = await Property.findById(req.params.id);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { propertyAPI, authAPI, enquiryAPI, settingsAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Edit, Trash2, LogOut, X, LayoutDashboard, MessageSquare, Settings } from 'lucide-react';
+import { formatPrice } from '../utils/formatPrice';
 
 const AdminDashboard = () => {
     const [properties, setProperties] = useState([]);
@@ -62,9 +63,7 @@ const AdminDashboard = () => {
 
     const fetchEnquiries = async () => {
         try {
-            console.log("Fetching enquiries...");
             const response = await enquiryAPI.getAll();
-            console.log("Enquiries fetched:", response.data);
             setEnquiries(response.data);
         } catch (error) {
             console.error("Error fetching enquiries:", error);
@@ -343,7 +342,7 @@ const AdminDashboard = () => {
                                                                 <div className="flex text-sm text-gray-500">
                                                                     <p className="truncate">{property.location}</p>
                                                                     <span className="mx-1">&middot;</span>
-                                                                    <p>{property.price}</p>
+                                                                    <p>{formatPrice(property.price)}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
