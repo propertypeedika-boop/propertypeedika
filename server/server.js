@@ -31,11 +31,23 @@ app.use(cors({
         // Allow requests with no origin (mobile apps, Postman, etc.)
         if (!origin) return callback(null, true);
 
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+        // Check against allowed origins list
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            return callback(null, true);
         }
+
+        // Allow all Vercel deployments automatically
+        if (origin.endsWith('.vercel.app')) {
+            return callback(null, true);
+        }
+
+        // Allow localhost in development
+        if (process.env.NODE_ENV === 'development') {
+            return callback(null, true);
+        }
+
+        console.log('Blocked by CORS:', origin); // Log blocked origins for debugging
+        callback(new Error('Not allowed by CORS'));
     },
     credentials: true
 }));
