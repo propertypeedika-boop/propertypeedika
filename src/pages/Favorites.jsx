@@ -24,11 +24,20 @@ const Favorites = () => {
                 // Fetch all properties and filter (optimized for small scale, ideally backend should support getByIds)
                 // Since we don't have a getByIds endpoint yet, we'll fetch all and filter.
                 // Note: For production with many properties, add a specific endpoint.
-                const response = await propertyAPI.getAll();
-                const allProperties = response.data;
-                const savedProperties = allProperties.filter(p => savedIds.includes(p._id));
+                // Fetch all properties (with high limit to ensure we get all potential favorites)
+                // TODO: Implement a specific getByIds endpoint for better performance
+                const response = await propertyAPI.getAll({ limit: 1000 });
 
-                setFavorites(savedProperties);
+                // Handle new paginated response structure
+                const allProperties = response.data.properties || response.data;
+
+                if (Array.isArray(allProperties)) {
+                    const savedProperties = allProperties.filter(p => savedIds.includes(p._id));
+                    setFavorites(savedProperties);
+                } else {
+                    console.error("Unexpected API response format:", response.data);
+                    setFavorites([]);
+                }
             } catch (err) {
                 console.error("Error fetching favorites:", err);
                 setError("Failed to load favorites");
