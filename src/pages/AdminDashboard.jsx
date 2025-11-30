@@ -52,8 +52,10 @@ const AdminDashboard = () => {
 
     const fetchProperties = async () => {
         try {
-            const response = await propertyAPI.getAll();
-            setProperties(response.data);
+            const response = await propertyAPI.getAll({ limit: 1000 });
+            // Handle new paginated response structure
+            const propertiesData = response.data.properties || response.data;
+            setProperties(Array.isArray(propertiesData) ? propertiesData : []);
         } catch (error) {
             console.error("Error fetching properties:", error);
         } finally {
