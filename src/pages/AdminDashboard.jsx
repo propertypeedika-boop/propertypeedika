@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { propertyAPI, authAPI, enquiryAPI, settingsAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, LogOut, X, LayoutDashboard, MessageSquare, Settings } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, X, LayoutDashboard, MessageSquare, Settings, MapPin } from 'lucide-react';
 import { formatPrice } from '../utils/formatPrice';
 
 const AdminDashboard = () => {
@@ -33,6 +33,7 @@ const AdminDashboard = () => {
     const [images, setImages] = useState([]);
     const [settings, setSettings] = useState({ whatsappNumber: '' });
     const [settingsLoading, setSettingsLoading] = useState(false);
+    const [geocodingLoading, setGeocodingLoading] = useState(false);
 
     useEffect(() => {
         verifyAuth();
@@ -178,6 +179,31 @@ const AdminDashboard = () => {
 
     const handleImageChange = (e) => {
         setImages(Array.from(e.target.files));
+    };
+
+    const handleGeocode = async () => {
+        if (!formData.location) return;
+
+        setGeocodingLoading(true);
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(formData.location)}`);
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                setFormData(prev => ({
+                    ...prev,
+                    lat: data[0].lat,
+                    lng: data[0].lon
+                }));
+            } else {
+                alert("Location not found. Please try a more specific address.");
+            }
+        } catch (error) {
+            console.error("Geocoding error:", error);
+            alert("Failed to fetch coordinates.");
+        } finally {
+            setGeocodingLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -506,7 +532,24 @@ const AdminDashboard = () => {
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700">Location</label>
-                                                <input type="text" name="location" value={formData.location} onChange={handleInputChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
+                                                <div className="mt-1 flex rounded-md shadow-sm">
+                                                    <input
+                                                        type="text"
+                                                        name="location"
+                                                        value={formData.location}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-l-md border border-gray-300 focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleGeocode}
+                                                        disabled={geocodingLoading || !formData.location}
+                                                        className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm hover:bg-gray-100 disabled:opacity-50"
+                                                    >
+                                                        {geocodingLoading ? '...' : <MapPin className="h-4 w-4" />}
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
