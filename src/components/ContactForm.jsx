@@ -19,30 +19,48 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSending(true);
-        try {
-            // 1. Save to database
-            await enquiryAPI.create({ ...formData, propertyId });
+        setLoading(true);
+        setStatus({ type: '', message: '' });
 
-            // 2. Send email notification
-            const templateParams = {
-                to_name: "Admin",
-                from_name: formData.name,
-                from_email: formData.email,
+        try {
+            // 1. Save to Database (Backend)
+            const dbResponse = await enquiryAPI.create({
+                name: formData.name,
+                email: formData.email,
                 phone: formData.phone,
                 message: formData.message,
-                property_id: propertyId ? `Property Link: https://propertypeedika.vercel.app/property/${propertyId}` : 'General Enquiry'
-            };
+                propertyId: propertyId || null
+            });
 
-            await sendEmail(templateParams);
+            // 2. Send Email Notification (EmailJS)
+            // We don't block the UI if email fails, but we log it
+            try {
+                const { sendEmail } = await import('../services/emailService');
+                await sendEmail({
+                    to_name: "Admin",
+                    from_name: formData.name,
+                    from_email: formData.email,
+                    phone: formData.phone,
+                    message: formData.message,
+                    property_info: propertyId ? `Property ID: ${propertyId}` : "General Enquiry"
+                });
+                console.log('📧 EmailJS notification sent');
+            } catch (emailError) {
+                console.error('❌ EmailJS failed:', emailError);
+            }
 
-            alert(`Thank you, ${formData.name}! We have received your message. We will contact you shortly.`);
+            setStatus({
+                type: 'success',
+                message: 'Thank you! Your enquiry has been sent successfully.'
+            });
             setFormData({ name: '', email: '', phone: '', message: '' });
         } catch (error) {
-            console.error("Error sending enquiry:", error);
-            alert("Failed to send message. Please try again.");
+            setStatus({
+                type: 'error',
+                message: error.response?.data?.message || 'Something went wrong. Please try again.'
+            });
         } finally {
-            setSending(false);
+            setLoading(false);
         }
     };
 
