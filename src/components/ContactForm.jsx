@@ -46,7 +46,9 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
                     from_email: formData.email,
                     phone: formData.phone,
                     message: formData.message,
-                    property_info: propertyId ? `Property ID: ${propertyId}` : "General Enquiry"
+                    property_info: propertyId
+                        ? `View Property: https://propertypeedika.in/property/${propertyId}`
+                        : "General Enquiry"
                 });
                 console.log('📧 EmailJS notification sent');
 
