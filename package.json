@@ -25,7 +25,6 @@
         "multer-storage-cloudinary": "^4.0.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-        "react-helmet-async": "^2.0.5",
         "react-leaflet": "^5.0.0",
         "react-router-dom": "^7.1.1",
         "react-share": "^5.2.2"
