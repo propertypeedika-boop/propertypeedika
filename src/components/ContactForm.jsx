@@ -12,6 +12,8 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
     });
     const [sending, setSending] = useState(false);
 
+    const [status, setStatus] = useState({ type: '', message: '' });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -19,23 +21,25 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setSending(true);
         setStatus({ type: '', message: '' });
 
         try {
             // 1. Save to Database (Backend)
-            const dbResponse = await enquiryAPI.create({
-                name: formData.name,
-                email: formData.email,
-                phone: formData.phone,
-                message: formData.message,
-                propertyId: propertyId || null
-            });
+            try {
+                await enquiryAPI.create({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    message: formData.message,
+                    propertyId: propertyId || null
+                });
+            } catch (dbError) {
+                console.warn('Database save failed, but proceeding to send email:', dbError);
+            }
 
             // 2. Send Email Notification (EmailJS)
-            // We don't block the UI if email fails, but we log it
             try {
-                const { sendEmail } = await import('../services/emailService');
                 await sendEmail({
                     to_name: "Admin",
                     from_name: formData.name,
@@ -45,22 +49,30 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
                     property_info: propertyId ? `Property ID: ${propertyId}` : "General Enquiry"
                 });
                 console.log('📧 EmailJS notification sent');
+
+                setStatus({
+                    type: 'success',
+                    message: 'Thank you! Your enquiry has been sent successfully.'
+                });
+                setFormData({ name: '', email: '', phone: '', message: '' });
+
             } catch (emailError) {
                 console.error('❌ EmailJS failed:', emailError);
+                setStatus({
+                    type: 'error',
+                    message: 'Failed to send email notifcation. Please contact us directly.'
+                });
             }
 
-            setStatus({
-                type: 'success',
-                message: 'Thank you! Your enquiry has been sent successfully.'
-            });
-            setFormData({ name: '', email: '', phone: '', message: '' });
         } catch (error) {
+            // Main catch block fallback
+            console.error("Form error:", error);
             setStatus({
                 type: 'error',
-                message: error.response?.data?.message || 'Something went wrong. Please try again.'
+                message: 'Something went wrong. Please try again.'
             });
         } finally {
-            setLoading(false);
+            setSending(false);
         }
     };
 
