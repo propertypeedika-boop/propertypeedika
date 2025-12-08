@@ -219,145 +219,141 @@ const PropertyDetails = () => {
                                 <div className="text-center border-r border-gray-100 last:border-0">
                                     <span className="block text-gray-500 text-sm mb-1">Bedrooms</span>
                                     <div className="flex items-center justify-center font-bold text-lg">
-                                        <Bed className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.specs?.beds || '-'}
-                                    </div>
-                                </div>
-                                <div className="text-center border-r border-gray-100 last:border-0">
-                                    <span className="block text-gray-500 text-sm mb-1">Bathrooms</span>
-                                    <div className="flex items-center justify-center font-bold text-lg">
-                                        <Bath className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.specs?.baths || '-'}
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <span className="block text-gray-500 text-sm mb-1">Area</span>
-                                    <div className="flex items-center justify-center font-bold text-lg">
-                                        <Square className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.specs?.area || '-'}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mb-8">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">Description</h2>
-                                <p className="text-gray-600 leading-relaxed">
-                                    {property.description}
-                                </p>
-                            </div>
-
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">Amenities</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {property.amenities && property.amenities.map((amenity, index) => (
-                                        <div key={index} className="flex items-center text-gray-700">
-                                            <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                                                <Check className="h-4 w-4 text-green-600" />
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                                            {property.specs?.beds > 0 && (
+                                                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                                    <Bed className="h-5 w-5 mr-2 text-green-600" />
+                                                    <span>{property.specs?.beds} Beds</span>
+                                                </div>
+                                            )}
+                                            {property.specs?.baths > 0 && (
+                                                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                                    <Bath className="h-5 w-5 mr-2 text-green-600" />
+                                                    <span>{property.specs?.baths} Baths</span>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                                <Square className="h-5 w-5 mr-2 text-green-600" />
+                                                <span>{property.specs?.area}</span>
                                             </div>
-                                            {amenity}
+                                            <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                                <MapPin className="h-5 w-5 mr-2 text-green-600" />
+                                                <span className="truncate">{property.location}</span>
+                                            </div>
                                         </div>
-                                    ))}
+
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-900 mb-4">Amenities</h2>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {property.amenities && property.amenities.map((amenity, index) => (
+                                                    <div key={index} className="flex items-center text-gray-700">
+                                                        <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                                                            <Check className="h-4 w-4 text-green-600" />
+                                                        </div>
+                                                        {amenity}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Map Section */}
+                                        {property.coordinates && property.coordinates.lat && property.coordinates.lng && (
+                                            <div className="mt-8 pt-8 border-t border-gray-200">
+                                                <h2 className="text-xl font-bold text-gray-900 mb-4">Location</h2>
+                                                <div className="h-[400px] rounded-lg overflow-hidden shadow-sm border border-gray-200 z-0">
+                                                    <MapContainer
+                                                        center={[property.coordinates.lat, property.coordinates.lng]}
+                                                        zoom={13}
+                                                        scrollWheelZoom={false}
+                                                        style={{ height: '100%', width: '100%' }}
+                                                    >
+                                                        <TileLayer
+                                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                        />
+                                                        <Marker position={[property.coordinates.lat, property.coordinates.lng]}>
+                                                            <Popup>
+                                                                {property.title} <br /> {property.location}
+                                                            </Popup>
+                                                        </Marker>
+                                                    </MapContainer>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* External Link Button - shows if property is listed on another site */}
+                                        {property.externalLink && (
+                                            <div className="mt-8 pt-8 border-t border-gray-200">
+                                                <h2 className="text-xl font-bold text-gray-900 mb-4">View on Other Platform</h2>
+                                                <a
+                                                    href={property.externalLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center justify-center bg-[var(--primary-green)] text-white font-semibold px-8 py-4 rounded-lg transition-all hover:bg-[var(--primary-green-dark)] hover:shadow-lg"
+                                                >
+                                                    <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                    View on External Site
+                                                </a>
+                                                <p className="text-sm text-gray-500 mt-2">This property is also listed on another platform</p>
+                                            </div>
+                                        )}
+
+                                        {/* Similar Properties Section */}
+                                        {similarProperties.length > 0 && (
+                                            <div className="mt-12 pt-8 border-t border-gray-200">
+                                                <h2 className="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    {similarProperties.map(prop => (
+                                                        <PropertyCard key={prop._id} property={prop} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="lg:col-span-1">
+                                    <div className="sticky top-24 space-y-6">
+                                        {/* Action Buttons */}
+                                        <div className="bg-white rounded-lg shadow-sm p-6">
+                                            <a
+                                                href={`https://wa.me/${whatsappNumber}?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-lg transition-colors mb-4 shadow-sm"
+                                            >
+                                                <MessageCircle className="h-5 w-5 mr-2" />
+                                                Chat on WhatsApp
+                                            </a>
+
+                                            <div className="border-t border-gray-100 pt-4">
+                                                <p className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+                                                    <Share2 className="h-4 w-4 mr-2" />
+                                                    Share this Property
+                                                </p>
+                                                <div className="flex gap-2">
+                                                    <WhatsappShareButton url={shareUrl} title={property.title}>
+                                                        <WhatsappIcon size={40} round />
+                                                    </WhatsappShareButton>
+                                                    <FacebookShareButton url={shareUrl} quote={property.title}>
+                                                        <FacebookIcon size={40} round />
+                                                    </FacebookShareButton>
+                                                    <TwitterShareButton url={shareUrl} title={property.title}>
+                                                        <TwitterIcon size={40} round />
+                                                    </TwitterShareButton>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ContactForm title="Interested in this property?" propertyId={property._id} propertyTitle={property.title} />
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Map Section */}
-                            {property.coordinates && property.coordinates.lat && property.coordinates.lng && (
-                                <div className="mt-8 pt-8 border-t border-gray-200">
-                                    <h2 className="text-xl font-bold text-gray-900 mb-4">Location</h2>
-                                    <div className="h-[400px] rounded-lg overflow-hidden shadow-sm border border-gray-200 z-0">
-                                        <MapContainer
-                                            center={[property.coordinates.lat, property.coordinates.lng]}
-                                            zoom={13}
-                                            scrollWheelZoom={false}
-                                            style={{ height: '100%', width: '100%' }}
-                                        >
-                                            <TileLayer
-                                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                            />
-                                            <Marker position={[property.coordinates.lat, property.coordinates.lng]}>
-                                                <Popup>
-                                                    {property.title} <br /> {property.location}
-                                                </Popup>
-                                            </Marker>
-                                        </MapContainer>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* External Link Button - shows if property is listed on another site */}
-                            {property.externalLink && (
-                                <div className="mt-8 pt-8 border-t border-gray-200">
-                                    <h2 className="text-xl font-bold text-gray-900 mb-4">View on Other Platform</h2>
-                                    <a
-                                        href={property.externalLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center bg-[var(--primary-green)] text-white font-semibold px-8 py-4 rounded-lg transition-all hover:bg-[var(--primary-green-dark)] hover:shadow-lg"
-                                    >
-                                        <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                        View on External Site
-                                    </a>
-                                    <p className="text-sm text-gray-500 mt-2">This property is also listed on another platform</p>
-                                </div>
-                            )}
-
-                            {/* Similar Properties Section */}
-                            {similarProperties.length > 0 && (
-                                <div className="mt-12 pt-8 border-t border-gray-200">
-                                    <h2 className="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {similarProperties.map(prop => (
-                                            <PropertyCard key={prop._id} property={prop} />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </div>
-
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-24 space-y-6">
-                            {/* Action Buttons */}
-                            <div className="bg-white rounded-lg shadow-sm p-6">
-                                <a
-                                    href={`https://wa.me/${whatsappNumber}?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-lg transition-colors mb-4 shadow-sm"
-                                >
-                                    <MessageCircle className="h-5 w-5 mr-2" />
-                                    Chat on WhatsApp
-                                </a>
-
-                                <div className="border-t border-gray-100 pt-4">
-                                    <p className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
-                                        <Share2 className="h-4 w-4 mr-2" />
-                                        Share this Property
-                                    </p>
-                                    <div className="flex gap-2">
-                                        <WhatsappShareButton url={shareUrl} title={property.title}>
-                                            <WhatsappIcon size={40} round />
-                                        </WhatsappShareButton>
-                                        <FacebookShareButton url={shareUrl} quote={property.title}>
-                                            <FacebookIcon size={40} round />
-                                        </FacebookShareButton>
-                                        <TwitterShareButton url={shareUrl} title={property.title}>
-                                            <TwitterIcon size={40} round />
-                                        </TwitterShareButton>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <ContactForm title="Interested in this property?" propertyId={property._id} propertyTitle={property.title} />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+                    );
 };
 
-export default PropertyDetails;
+                    export default PropertyDetails;
