@@ -318,46 +318,49 @@ const PropertyDetails = () => {
                                 </div>
                             )}
 
-                            <div className="lg:col-span-1">
-                                <div className="sticky top-24 space-y-6">
-                                    {/* Action Buttons */}
-                                    <div className="bg-white rounded-lg shadow-sm p-6">
-                                        <a
-                                            href={`https://wa.me/${whatsappNumber}?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-lg transition-colors mb-4 shadow-sm"
-                                        >
-                                            <MessageCircle className="h-5 w-5 mr-2" />
-                                            Chat on WhatsApp
-                                        </a>
+                        </div>
+                    </div>
 
-                                        <div className="border-t border-gray-100 pt-4">
-                                            <p className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
-                                                <Share2 className="h-4 w-4 mr-2" />
-                                                Share this Property
-                                            </p>
-                                            <div className="flex gap-2">
-                                                <WhatsappShareButton url={shareUrl} title={property.title}>
-                                                    <WhatsappIcon size={40} round />
-                                                </WhatsappShareButton>
-                                                <FacebookShareButton url={shareUrl} quote={property.title}>
-                                                    <FacebookIcon size={40} round />
-                                                </FacebookShareButton>
-                                                <TwitterShareButton url={shareUrl} title={property.title}>
-                                                    <TwitterIcon size={40} round />
-                                                </TwitterShareButton>
-                                            </div>
-                                        </div>
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-24 space-y-6">
+                            {/* Action Buttons */}
+                            <div className="bg-white rounded-lg shadow-sm p-6">
+                                <a
+                                    href={`https://wa.me/${whatsappNumber}?text=Hi, I'm interested in this property: ${property.title} - ${window.location.href}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 rounded-lg transition-colors mb-4 shadow-sm"
+                                >
+                                    <MessageCircle className="h-5 w-5 mr-2" />
+                                    Chat on WhatsApp
+                                </a>
+
+                                <div className="border-t border-gray-100 pt-4">
+                                    <p className="text-sm font-semibold text-gray-500 mb-3 flex items-center">
+                                        <Share2 className="h-4 w-4 mr-2" />
+                                        Share this Property
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <WhatsappShareButton url={shareUrl} title={property.title}>
+                                            <WhatsappIcon size={40} round />
+                                        </WhatsappShareButton>
+                                        <FacebookShareButton url={shareUrl} quote={property.title}>
+                                            <FacebookIcon size={40} round />
+                                        </FacebookShareButton>
+                                        <TwitterShareButton url={shareUrl} title={property.title}>
+                                            <TwitterIcon size={40} round />
+                                        </TwitterShareButton>
                                     </div>
-
-                                    <ContactForm title="Interested in this property?" propertyId={property._id} propertyTitle={property.title} />
                                 </div>
                             </div>
+
+                            <ContactForm title="Interested in this property?" propertyId={property._id} propertyTitle={property.title} />
                         </div>
                     </div>
                 </div>
-                );
+            </div>
+        </div>
+    );
 };
 
-                export default PropertyDetails;
+export default PropertyDetails;
