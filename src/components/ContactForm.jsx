@@ -1,4 +1,3 @@
-```javascript
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 import { enquiryAPI } from '../services/api';
@@ -49,113 +48,113 @@ const ContactForm = ({ title = "Contact Us", propertyId = null, propertyTitle = 
                     message: formData.message,
                     property_title: propertyTitle || (propertyId ? 'Property Enquiry' : 'General Contact'),
                     property_link: propertyId ? `https://propertypeedika.in/property/${propertyId}` : '',
-type: propertyId ? 'Property Enquiry' : 'General Contact'
+                    type: propertyId ? 'Property Enquiry' : 'General Contact'
                 });
 
-if (!result.success) {
-    throw new Error('EmailJS service failed');
-}
+                if (!result.success) {
+                    throw new Error('EmailJS service failed');
+                }
 
-console.log('📧 EmailJS notification sent');
+                console.log('📧 EmailJS notification sent');
 
-setStatus({
-    type: 'success',
-    message: 'Thank you! Your enquiry has been sent successfully.'
-});
-setFormData({ name: '', email: '', phone: '', message: '' });
-                
+                setStatus({
+                    type: 'success',
+                    message: 'Thank you! Your enquiry has been sent successfully.'
+                });
+                setFormData({ name: '', email: '', phone: '', message: '' });
+
             } catch (emailError) {
-    console.error('❌ EmailJS failed:', emailError);
-    setStatus({
-        type: 'error',
-        message: 'Failed to send email. Please try again or contact us directly.'
-    });
-}
+                console.error('❌ EmailJS failed:', emailError);
+                setStatus({
+                    type: 'error',
+                    message: 'Failed to send email. Please try again or contact us directly.'
+                });
+            }
 
         } catch (error) {
-} finally {
-    setSending(false);
-}
+        } finally {
+            setSending(false);
+        }
     };
 
-return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
+    return (
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
 
-        {status.message && (
-            <div className={`mb-4 p-3 rounded-md ${status.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                {status.message}
-            </div>
-        )}
+            {status.message && (
+                <div className={`mb-4 p-3 rounded-md ${status.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {status.message}
+                </div>
+            )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                    placeholder="John Doe"
-                    value={formData.name}
-                    onChange={handleChange}
-                />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                        placeholder="John Doe"
+                        value={formData.name}
+                        onChange={handleChange}
+                    />
+                </div>
 
-            <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                    placeholder="john@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-            </div>
+                <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                        placeholder="john@example.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                    />
+                </div>
 
-            <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                    placeholder="+91 98765 43210"
-                    value={formData.phone}
-                    onChange={handleChange}
-                />
-            </div>
+                <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                        placeholder="+91 98765 43210"
+                        value={formData.phone}
+                        onChange={handleChange}
+                    />
+                </div>
 
-            <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea
-                    id="message"
-                    name="message"
-                    rows="4"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-                    placeholder="I am interested in..."
-                    value={formData.message}
-                    onChange={handleChange}
-                ></textarea>
-            </div>
+                <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        rows="4"
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                        placeholder="I am interested in..."
+                        value={formData.message}
+                        onChange={handleChange}
+                    ></textarea>
+                </div>
 
-            <button
-                type="submit"
-                disabled={sending}
-                className={`w-full bg-green-700 text-white font-bold py-3 px-4 rounded-md hover:bg-green-800 transition-colors flex items-center justify-center ${sending ? 'opacity-70 cursor-not-allowed' : ''}`}
-            >
-                <Send className="h-4 w-4 mr-2" />
-                {sending ? 'Sending...' : 'Send Message'}
-            </button>
-        </form>
-    </div>
-);
+                <button
+                    type="submit"
+                    disabled={sending}
+                    className={`w-full bg-green-700 text-white font-bold py-3 px-4 rounded-md hover:bg-green-800 transition-colors flex items-center justify-center ${sending ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                    <Send className="h-4 w-4 mr-2" />
+                    {sending ? 'Sending...' : 'Send Message'}
+                </button>
+            </form>
+        </div>
+    );
 };
 
 export default ContactForm;
