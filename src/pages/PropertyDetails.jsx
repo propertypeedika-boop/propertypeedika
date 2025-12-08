@@ -351,7 +351,7 @@ const PropertyDetails = () => {
                                 </div>
                             </div>
 
-                            <ContactForm title="Interested in this property?" propertyId={property._id} />
+                            <ContactForm title="Interested in this property?" propertyId={property._id} propertyTitle={property.title} />
                         </div>
                     </div>
                 </div>
