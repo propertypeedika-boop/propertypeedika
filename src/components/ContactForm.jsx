@@ -41,7 +41,7 @@ const ContactForm = ({ title = "Contact Us", propertyId = null, propertyTitle = 
 
             // 2. Send Email Notification (EmailJS)
             try {
-                await sendEmail({
+                const result = await sendEmail({
                     to_name: "Admin",
                     from_name: formData.name,
                     from_email: formData.email,
@@ -51,6 +51,11 @@ const ContactForm = ({ title = "Contact Us", propertyId = null, propertyTitle = 
                     property_link: propertyId ? `https://propertypeedika.in/property/${propertyId}` : '',
 type: propertyId ? 'Property Enquiry' : 'General Contact'
                 });
+
+if (!result.success) {
+    throw new Error('EmailJS service failed');
+}
+
 console.log('📧 EmailJS notification sent');
 
 setStatus({
@@ -58,22 +63,16 @@ setStatus({
     message: 'Thank you! Your enquiry has been sent successfully.'
 });
 setFormData({ name: '', email: '', phone: '', message: '' });
-
+                
             } catch (emailError) {
     console.error('❌ EmailJS failed:', emailError);
     setStatus({
         type: 'error',
-        message: 'Failed to send email notifcation. Please contact us directly.'
+        message: 'Failed to send email. Please try again or contact us directly.'
     });
 }
 
         } catch (error) {
-    // Main catch block fallback
-    console.error("Form error:", error);
-    setStatus({
-        type: 'error',
-        message: 'Something went wrong. Please try again.'
-    });
 } finally {
     setSending(false);
 }
