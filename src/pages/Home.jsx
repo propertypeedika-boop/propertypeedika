@@ -75,7 +75,7 @@ const Home = () => {
                             </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-2">Local Expertise</h3>
                             <p className="text-gray-600">
-                                Deep knowledge of Trivandrum's real estate market, from Kowdiar to Technopark.
+                                Deep knowledge of kerala’s real estate market . Especially in the capital city
                             </p>
                         </div>
 

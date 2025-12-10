@@ -77,17 +77,15 @@ const Footer = () => {
                         <ul className="space-y-4">
                             <li className="flex items-start">
                                 <MapPin className="h-5 w-5 text-green-400 mr-2 mt-1" />
-                                <span className="text-gray-400">TC 12/345, Kowd
-
-                                    iar Main Road, Trivandrum, Kerala 695003</span>
+                                <span className="text-gray-400">TC 25/1958-7, Sharon Bliss, 3rd Floor, Plamoodu, Pattom, Trivandrum Thiruvananthapuram</span>
                             </li>
                             <li className="flex items-center">
                                 <Phone className="h-5 w-5 text-green-400 mr-2" />
-                                <span className="text-gray-400">+91 98765 43210</span>
+                                <span className="text-gray-400">+91 89214 94011</span>
                             </li>
                             <li className="flex items-center">
                                 <Mail className="h-5 w-5 text-green-400 mr-2" />
-                                <span className="text-gray-400">info@propertypeedika.com</span>
+                                <span className="text-gray-400">propertypeedika@gmail.com</span>
                             </li>
                         </ul>
                     </div>
@@ -110,7 +108,7 @@ const Footer = () => {
                     </div>
                     <p className="text-center text-gray-400 text-sm mt-3">
                         <MapPin className="h-4 w-4 inline mr-1 text-green-400" />
-                        TC 12/345, Kowdiar Main Road, Trivandrum, Kerala 695003
+                        TC 25/1958-7, Sharon Bliss, 3rd Floor, Plamoodu, Pattom, Trivandrum Thiruvananthapuram
                     </p>
                 </div>
 

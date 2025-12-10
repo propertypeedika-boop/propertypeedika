@@ -26,8 +26,8 @@ const Contact = () => {
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Visit Us</h3>
                                         <p className="text-gray-600">
-                                            TC 12/345, Kowdiar Main Road,<br />
-                                            Trivandrum, Kerala 695003
+                                            TC 25/1958-7, Sharon Bliss, 3rd Floor, Plamoodu,<br />
+                                            Pattom, Trivandrum Thiruvananthapuram
                                         </p>
                                     </div>
                                 </div>
@@ -38,8 +38,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Call Us</h3>
-                                        <p className="text-gray-600">+91 98765 43210</p>
-                                        <p className="text-gray-600">+91 471 2345678</p>
+                                        <p className="text-gray-600">+91 89214 94011</p>
                                     </div>
                                 </div>
 
@@ -49,8 +48,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
-                                        <p className="text-gray-600">info@propertypeedika.com</p>
-                                        <p className="text-gray-600">support@propertypeedika.com</p>
+                                        <p className="text-gray-600">propertypeedika@gmail.com</p>
                                     </div>
                                 </div>
 
@@ -61,7 +59,7 @@ const Contact = () => {
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">WhatsApp</h3>
                                         <a
-                                            href="https://wa.me/919876543210?text=Hi%2C%20I%27m%20interested%20in%20your%20properties"
+                                            href="https://wa.me/918921494011?text=Hi%2C%20I%27m%20interested%20in%20your%20properties"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center text-green-600 hover:text-green-700 font-medium"
@@ -96,8 +94,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-900 mb-1">Working Hours</h3>
-                                        <p className="text-gray-600">Mon - Sat: 9:00 AM - 6:00 PM</p>
-                                        <p className="text-gray-600">Sunday: Closed</p>
+                                        <p className="text-gray-600">24/7</p>
                                     </div>
                                 </div>
                             </div>
