@@ -581,15 +581,19 @@ const AdminDashboard = () => {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="grid grid-cols-3 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700">Beds</label>
-                                                <input type="number" name="beds" value={formData.beds} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700">Baths</label>
-                                                <input type="number" name="baths" value={formData.baths} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
-                                            </div>
+                                        <div className={`grid gap-4 ${['apartment', 'villa', 'house'].includes(formData.category) ? 'grid-cols-3' : 'grid-cols-1'}`}>
+                                            {['apartment', 'villa', 'house'].includes(formData.category) && (
+                                                <>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Beds</label>
+                                                        <input type="number" name="beds" value={formData.beds} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Baths</label>
+                                                        <input type="number" name="baths" value={formData.baths} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />
+                                                    </div>
+                                                </>
+                                            )}
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700">Area</label>
                                                 <input type="text" name="area" value={formData.area} onChange={handleInputChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-gray-900 bg-white" />

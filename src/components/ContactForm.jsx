@@ -3,7 +3,7 @@ import { Send } from 'lucide-react';
 import { enquiryAPI } from '../services/api';
 import { sendEmail } from '../services/emailService';
 
-const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
+const ContactForm = ({ title = "Contact Us", propertyId = null, propertyTitle = null }) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -12,6 +12,8 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
     });
     const [sending, setSending] = useState(false);
 
+    const [status, setStatus] = useState({ type: '', message: '' });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -19,54 +21,72 @@ const ContactForm = ({ title = "Contact Us", propertyId = null }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setSending(true);
         setStatus({ type: '', message: '' });
 
         try {
             // 1. Save to Database (Backend)
-            const dbResponse = await enquiryAPI.create({
-                name: formData.name,
-                email: formData.email,
-                phone: formData.phone,
-                message: formData.message,
-                propertyId: propertyId || null
-            });
+            try {
+                await enquiryAPI.create({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    message: formData.message,
+                    propertyId: propertyId || null
+                });
+            } catch (dbError) {
+                console.warn('Database save failed, but proceeding to send email:', dbError);
+            }
 
             // 2. Send Email Notification (EmailJS)
-            // We don't block the UI if email fails, but we log it
             try {
-                const { sendEmail } = await import('../services/emailService');
-                await sendEmail({
+                const result = await sendEmail({
                     to_name: "Admin",
                     from_name: formData.name,
                     from_email: formData.email,
                     phone: formData.phone,
                     message: formData.message,
-                    property_info: propertyId ? `Property ID: ${propertyId}` : "General Enquiry"
+                    property_title: propertyTitle || (propertyId ? 'Property Enquiry' : 'General Contact'),
+                    property_link: propertyId ? `https://propertypeedika.in/property/${propertyId}` : '',
+                    type: propertyId ? 'Property Enquiry' : 'General Contact'
                 });
+
+                if (!result.success) {
+                    throw new Error('EmailJS service failed');
+                }
+
                 console.log('📧 EmailJS notification sent');
+
+                setStatus({
+                    type: 'success',
+                    message: 'Thank you! Your enquiry has been sent successfully.'
+                });
+                setFormData({ name: '', email: '', phone: '', message: '' });
+
             } catch (emailError) {
                 console.error('❌ EmailJS failed:', emailError);
+                setStatus({
+                    type: 'error',
+                    message: 'Failed to send email. Please try again or contact us directly.'
+                });
             }
 
-            setStatus({
-                type: 'success',
-                message: 'Thank you! Your enquiry has been sent successfully.'
-            });
-            setFormData({ name: '', email: '', phone: '', message: '' });
         } catch (error) {
-            setStatus({
-                type: 'error',
-                message: error.response?.data?.message || 'Something went wrong. Please try again.'
-            });
         } finally {
-            setLoading(false);
+            setSending(false);
         }
     };
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
             <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
+
+            {status.message && (
+                <div className={`mb-4 p-3 rounded-md ${status.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {status.message}
+                </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>

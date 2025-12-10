@@ -215,38 +215,40 @@ const PropertyDetails = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4 border-t border-b border-gray-100 py-6 mb-6">
-                                <div className="text-center border-r border-gray-100 last:border-0">
-                                    <span className="block text-gray-500 text-sm mb-1">Bedrooms</span>
-                                    <div className="flex items-center justify-center font-bold text-lg">
-                                        <Bed className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.specs?.beds || '-'}
+                            {/* Specs Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 border-t border-gray-100 pt-6">
+                                {property.specs?.beds > 0 && (
+                                    <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                        <Bed className="h-5 w-5 mr-2 text-green-600" />
+                                        <span>{property.specs?.beds} Beds</span>
                                     </div>
+                                )}
+                                {property.specs?.baths > 0 && (
+                                    <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                        <Bath className="h-5 w-5 mr-2 text-green-600" />
+                                        <span>{property.specs?.baths} Baths</span>
+                                    </div>
+                                )}
+                                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                    <Square className="h-5 w-5 mr-2 text-green-600" />
+                                    <span>{property.specs?.area}</span>
                                 </div>
-                                <div className="text-center border-r border-gray-100 last:border-0">
-                                    <span className="block text-gray-500 text-sm mb-1">Bathrooms</span>
-                                    <div className="flex items-center justify-center font-bold text-lg">
-                                        <Bath className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.specs?.baths || '-'}
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <span className="block text-gray-500 text-sm mb-1">Area</span>
-                                    <div className="flex items-center justify-center font-bold text-lg">
-                                        <Square className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.specs?.area || '-'}
-                                    </div>
+                                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
+                                    <MapPin className="h-5 w-5 mr-2 text-green-600" />
+                                    <span className="truncate">{property.location}</span>
                                 </div>
                             </div>
 
+                            {/* Description */}
                             <div className="mb-8">
                                 <h2 className="text-xl font-bold text-gray-900 mb-4">Description</h2>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
                                     {property.description}
                                 </p>
                             </div>
 
-                            <div>
+                            {/* Amenities */}
+                            <div className="mb-8">
                                 <h2 className="text-xl font-bold text-gray-900 mb-4">Amenities</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {property.amenities && property.amenities.map((amenity, index) => (
@@ -285,7 +287,7 @@ const PropertyDetails = () => {
                                 </div>
                             )}
 
-                            {/* External Link Button - shows if property is listed on another site */}
+                            {/* External Link Button */}
                             {property.externalLink && (
                                 <div className="mt-8 pt-8 border-t border-gray-200">
                                     <h2 className="text-xl font-bold text-gray-900 mb-4">View on Other Platform</h2>
@@ -315,6 +317,7 @@ const PropertyDetails = () => {
                                     </div>
                                 </div>
                             )}
+
                         </div>
                     </div>
 
@@ -351,7 +354,7 @@ const PropertyDetails = () => {
                                 </div>
                             </div>
 
-                            <ContactForm title="Interested in this property?" propertyId={property._id} />
+                            <ContactForm title="Interested in this property?" propertyId={property._id} propertyTitle={property.title} />
                         </div>
                     </div>
                 </div>
