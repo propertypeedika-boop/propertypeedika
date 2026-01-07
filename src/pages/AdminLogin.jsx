@@ -19,7 +19,31 @@ const AdminLogin = () => {
             localStorage.setItem('token', response.data.token);
             navigate('/admin/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            console.error('Login Error:', err);
+
+            let errorMessage = 'Login failed';
+
+            if (err.response) {
+                // Server responded with a status code outside 2xx range
+                const data = err.response.data;
+
+                if (typeof data === 'string') {
+                    errorMessage = data;
+                } else if (data.message) {
+                    errorMessage = data.message;
+                } else if (data.errors && Array.isArray(data.errors)) {
+                    // Handle express-validator errors
+                    errorMessage = data.errors.map(e => e.msg).join(', ');
+                }
+            } else if (err.request) {
+                // Request was made but no response received
+                errorMessage = 'Network Error: No response from server. Please check your connection.';
+            } else {
+                // Something happened in setting up the request
+                errorMessage = err.message;
+            }
+
+            setError(errorMessage);
         }
     };
 
