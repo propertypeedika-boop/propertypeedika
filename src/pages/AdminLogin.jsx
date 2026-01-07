@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../services/api';
-import { Lock } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
 
 const AdminLogin = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -14,6 +15,8 @@ const AdminLogin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setIsLoading(true);
         try {
             const response = await authAPI.login(formData);
             localStorage.setItem('token', response.data.token);
@@ -44,6 +47,8 @@ const AdminLogin = () => {
             }
 
             setError(errorMessage);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -68,6 +73,7 @@ const AdminLogin = () => {
                                 placeholder="Username"
                                 value={formData.username}
                                 onChange={handleChange}
+                                disabled={isLoading}
                             />
                         </div>
                         <div>
@@ -79,6 +85,7 @@ const AdminLogin = () => {
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={handleChange}
+                                disabled={isLoading}
                             />
                         </div>
                     </div>
@@ -86,9 +93,17 @@ const AdminLogin = () => {
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                            disabled={isLoading}
+                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            Sign in
+                            {isLoading ? (
+                                <span className="flex items-center">
+                                    <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                                    Signing in...
+                                </span>
+                            ) : (
+                                'Sign in'
+                            )}
                         </button>
                     </div>
                 </form>
