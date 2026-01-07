@@ -71,7 +71,7 @@ const authLimiter = rateLimit({
     message: 'Too many login attempts, please try again later.',
 });
 
-app.use('/api/auth/login', authLimiter);
+// app.use('/api/auth/login', authLimiter); // Rate limit removed per user request
 
 // Body parsing middleware with size limits
 app.use(express.json({ limit: '10mb' }));
