@@ -202,11 +202,11 @@ const PropertyDetails = () => {
 
                         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                                <div>
-                                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 break-words">{property.title}</h1>
+                                <div className="w-full md:w-auto pr-0 md:pr-4">
+                                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 break-words w-full">{property.title}</h1>
                                     <div className="flex items-center text-gray-600">
-                                        <MapPin className="h-5 w-5 mr-2 text-green-500" />
-                                        {property.location}
+                                        <MapPin className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                                        <span className="break-words">{property.location}</span>
                                     </div>
                                 </div>
                                 <div className="mt-4 md:mt-0 text-right">
