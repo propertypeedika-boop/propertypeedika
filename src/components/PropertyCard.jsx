@@ -98,7 +98,7 @@ const PropertyCard = ({ property }) => {
                     {property.location}
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-1">{property.title}</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4 line-clamp-2 min-h-[3.5rem] break-words" title={property.title}>{property.title}</h3>
 
                 <div className="flex justify-between border-t border-gray-100 pt-4 mb-4">
                     {property.specs?.beds > 0 && (
