@@ -22,7 +22,7 @@ exports.createProperty = async (req, res) => {
             }
         }
 
-        const { title, description, price, location, type, category, specs, amenities, featured } = propertyData;
+        const { title, description, price, location, type, category, specs, amenities, featured, externalLink, coordinates } = propertyData;
 
         let imageUrls = [];
         if (req.files && req.files.length > 0) {
@@ -43,6 +43,8 @@ exports.createProperty = async (req, res) => {
             specs,
             amenities,
             featured,
+            externalLink,
+            coordinates,
             images: imageUrls,
         });
 
@@ -80,7 +82,7 @@ exports.getProperties = async (req, res) => {
 
         // Location search (case-insensitive regex)
         if (location) {
-            query.location = { $regex: location, $options: 'i' };
+            query.location = { $regex: location.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
         }
 
         // Custom price range filtering
