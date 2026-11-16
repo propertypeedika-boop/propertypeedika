@@ -1,0 +1,14 @@
+const express=require('express');
+const mongoose=require('mongoose');
+const Review=require('../models/Review');
+const auth=require('../middleware/auth');
+const {validateReview}=require('../utils/reviewValidation');
+const router=express.Router();
+router.get('/',async(req,res,next)=>{try{res.json(await Review.find({published:true,consent:true}).select('name location text rating createdAt').sort({createdAt:-1,_id:-1}).limit(24))}catch(e){next(e)}});
+router.get('/admin',auth,async(req,res,next)=>{try{res.json(await Review.find().sort({createdAt:-1,_id:-1}).limit(500))}catch(e){next(e)}});
+const payload=(req,res,next)=>{try{req.reviewData=validateReview(req.body);next()}catch(e){res.status(400).json({message:e.message})}};
+const id=(req,res,next)=>mongoose.isValidObjectId(req.params.id)?next():res.status(400).json({message:'Invalid review ID'});
+router.post('/',auth,payload,async(req,res,next)=>{try{res.status(201).json(await Review.create(req.reviewData))}catch(e){next(e)}});
+router.put('/:id',auth,id,payload,async(req,res,next)=>{try{const item=await Review.findByIdAndUpdate(req.params.id,req.reviewData,{new:true,runValidators:true});if(!item)return res.status(404).json({message:'Review not found'});res.json(item)}catch(e){next(e)}});
+router.delete('/:id',auth,id,async(req,res,next)=>{try{const item=await Review.findByIdAndDelete(req.params.id);if(!item)return res.status(404).json({message:'Review not found'});res.json({deleted:true})}catch(e){next(e)}});
+module.exports=router;
