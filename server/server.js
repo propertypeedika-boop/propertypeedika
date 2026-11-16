@@ -84,6 +84,8 @@ app.use('/api/properties', require('./routes/properties'));
 app.use('/api/enquiries', require('./routes/enquiries'));
 app.use('/api/settings', require('./routes/settings'));
 
+app.use('/api/reviews', require('./routes/reviews'));
+
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
     const mongoose = require('mongoose');
